@@ -1,0 +1,90 @@
+@import 'style.scss';
+
+footer {
+    background-color: $fith-color;
+    backdrop-filter: blur(5px);
+    font-family: $title-font;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    color: $secondary-color;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 2em;
+
+    .socialIcon {
+        width: 100%;
+        color: $secondary-color;
+        display: flex;
+        justify-content: space-around;
+
+        & :hover {
+            color: $third-color;
+        }
+    }
+
+    i {
+        color: $secondary-color;
+        font-size: 1.2rem;
+    }
+    .prev i, .next i {
+        color: $third-color;
+        font-size: 1.2rem;
+    }
+
+    .newsletter {
+        font-size: $font-size2;
+        font-weight: 400;
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        color: $third-color;
+
+        button {
+            cursor: pointer;
+        }
+    }
+
+    .mentionLink {
+        font-size: 10rem;
+        ul {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        li {
+            margin: 0.5rem;
+
+            & :hover {
+                color: $third-color;
+            }
+        }
+    }
+
+    .footer-link{
+        display: none;
+    }
+}
+
+
+@media (min-width: 785px) {
+    footer {
+        .socialIcon {
+            width: 30%;
+        }
+        .newsletter {
+            width: 30%;
+        }
+        .mentionLink {
+            width: 30%;
+        }
+        .footer-link{
+            display: block;
+        }
+    }
+}

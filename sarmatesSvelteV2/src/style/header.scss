@@ -1,0 +1,121 @@
+@import 'style.scss';
+@import 'burgerSVG.scss';
+
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+    background-color: $primary-color;
+    height: 70px;
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+
+    img {
+        width: 150px;
+    }
+
+    button {
+        background-color: $primary-color;
+        border: none;
+        cursor: pointer;
+        padding: 0;
+        display: block;
+    }
+
+    nav {
+        display: none;
+        opacity: 0;
+        position: absolute;
+        top: 70px; 
+        right: 0;
+        background-color: $sixth-color;
+        font-family: $title-font;
+        transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+    
+        &.navVisible {
+            display: flex;
+            visibility: visible;
+            opacity: 1;
+            transform: translateY(0%);
+        }
+    
+        ul {
+            color: $secondary-color;
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+    
+            li {
+                margin: 0.3rem;
+            }
+        }
+           
+    }
+    .language-selector {
+        position: relative;
+        display: inline-block;
+    
+        .selected {
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+        }
+    
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            // background-color: #f9f9f9;
+            max-width: 40px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+    
+            .flag {
+                display: block;
+                width: 40px;
+                height: 40px;
+                cursor: pointer;
+            }
+        }
+    
+        &:hover .dropdown-content {
+            display: block;
+        }
+    }
+    
+    
+    @media (min-width: 785px) {
+        button.burger-menu {
+            display: none !important;
+        }
+        nav {
+            display: flex !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            position: static;
+            width: auto;
+            background-color: transparent;
+            transform: none;
+    
+            ul {
+                flex-direction: row;
+                font-size: 1.15rem;
+    
+                li {
+                    color: $secondary-color;
+    
+                    a {
+                        opacity: 1;
+                        color: $secondary-color;
+                    }
+                }
+                .legal-mention {
+                    display: none;
+                }
+            }
+        }
+    }
+}

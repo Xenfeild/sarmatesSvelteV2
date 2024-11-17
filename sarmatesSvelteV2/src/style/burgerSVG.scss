@@ -1,0 +1,21 @@
+@import 'style.scss';
+
+
+// button {
+//     color: transparent;
+// }
+.hb {
+    width: 50px;
+    margin: 0 auto;
+    display: block;
+    background-color: $primary-color;
+    border: none;
+    &:hover {
+        stroke: $third-color;
+    }
+
+    &:hover path{
+        stroke: $third-color;
+    }
+  }
+
