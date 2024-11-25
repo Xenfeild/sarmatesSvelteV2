@@ -154,9 +154,9 @@ app.get('/api/live/:id', (req, res) => {
 
 // Route pour ajouter un nouvel événement live avec une image
 app.post('/api/live', upload.single('image'), (req, res) => {
-    const { address, event_date, link } = req.body;
+    const { event_name, address, event_date, link } = req.body;
     const image = req.file ? `/uploads/image/${req.file.filename}` : null;
-    db.run('INSERT INTO live (image, address, event_date, link) VALUES (?, ?, ?, ?)', [image, address, event_date, link], function(err) {
+    db.run('INSERT INTO live (image, event_name, address, event_date, link) VALUES (?, ?, ?, ?, ?)', [image, event_name, address, event_date, link], function(err) {
         if (err) {
             res.status(500).json({ error: err.message });
             return;
@@ -168,9 +168,9 @@ app.post('/api/live', upload.single('image'), (req, res) => {
 // Route pour mettre à jour un événement live
 app.put('/api/live/:id', upload.single('image'), (req, res) => {
     const { id } = req.params;
-    const { address, event_date, link } = req.body;
+    const { event_name, address, event_date, link } = req.body;
     const image = req.file ? `/uploads/image/${req.file.filename}` : req.body.image;
-    db.run('UPDATE live SET image = ?, address = ?, event_date = ?, link = ? WHERE id = ?', [image, address, event_date, link, id], function(err) {
+    db.run('UPDATE live SET image = ?, event_name = ?, address = ?, event_date = ?, link = ? WHERE id = ?', [image, event_name, address, event_date, link, id], function(err) {
         if (err) {
             res.status(500).json({ error: err.message });
             return;
@@ -194,6 +194,72 @@ app.delete('/api/live/:id', (req, res) => {
         res.status(200).json({ message: 'Live event deleted successfully' });
     });
 });
+
+
+// Presse
+
+// Add press
+app.post('/api/press', upload.single('image'), (req, res) => {
+    const { title, content, date, link } = req.body;
+    const image = req.file ? `/uploads/image/${req.file.filename}` : null;
+    const sql = `INSERT INTO press (title, image, content, date, link) VALUES (?, ?, ?, ?, ?)`;
+    db.run(sql, [title, image, content, date, link], function(err) {
+        if (err) {
+            res.status(500).json({ error: err.message });
+            return;
+        }
+        res.status(201).json({ id: this.lastID });
+    });
+});
+
+// Route pour récupérer tous les articles de presse
+app.get('/api/press', (req, res) => {
+    const sql = `SELECT * FROM press`;
+    db.all(sql, [], (err, rows) => {
+        if (err) {
+            res.status(500).json({ error: err.message });
+            return;
+        }
+        res.json(rows);
+    });
+});
+
+// Route pour mettre à jour un article de presse
+app.put('/api/press/:id', upload.single('image'), (req, res) => {
+    const { id } = req.params;
+    const { title, content, date, link } = req.body;
+    const image = req.file ? `/uploads/image/${req.file.filename}` : req.body.image;
+    const sql = `UPDATE press SET title = ?, image = ?, content = ?, date = ?, link = ? WHERE id = ?`;
+    db.run(sql, [title, image, content, date, link, id], function(err) {
+        if (err) {
+            res.status(500).json({ error: err.message });
+            return;
+        }
+        if (this.changes === 0) {
+            res.status(404).json({ error: 'Press entry not found' });
+            return;
+        }
+        res.json({ changes: this.changes });
+    });
+});
+
+// Route pour supprimer un article de presse
+app.delete('/api/press/:id', (req, res) => {
+    const { id } = req.params;
+    const sql = `DELETE FROM press WHERE id = ?`;
+    db.run(sql, id, function(err) {
+        if (err) {
+            res.status(500).json({ error: err.message });
+            return;
+        }
+        if (this.changes === 0) {
+            res.status(404).json({ error: 'Press entry not found' });
+            return;
+        }
+        res.status(200).json({ message: 'Press entry deleted successfully' });
+    });
+});
+
 
 // Démarrer le serveur
 app.listen(port, () => {

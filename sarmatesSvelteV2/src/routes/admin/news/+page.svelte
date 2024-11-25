@@ -160,16 +160,14 @@
             <input type="text" bind:value={editTitle} placeholder="Title" />
             <input type="file" accept="image/*" on:change={selectImage} />
             <textarea bind:value={editContent} placeholder="Content"></textarea>
-            <div>
-                <div class="adminBtn">
-                    <button on:click={updateNews}>Modifier</button>
-                    <button on:click={() => { editId = null;    previewImage = null; }}>Annuler</button>
-                </div>
+            <div class="adminBtn">
+                <button on:click={updateNews}>Modifier</button>
+                <button on:click={() => { editId = null;    previewImage = null; }}>Annuler</button>
             </div>
         </div>
     {/if}
     
-    <div class="from">
+    <div>
         <ul class="form">
             {#each news as item}
                 <li>

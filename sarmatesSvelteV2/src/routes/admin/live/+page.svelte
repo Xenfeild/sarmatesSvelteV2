@@ -3,6 +3,7 @@
 
     interface LiveItem {
         id: number;
+        event_name: string;
         image: string;
         address: string;
         event_date: string;
@@ -10,10 +11,12 @@
     }
 
     let live: LiveItem[] = [];
+    let newEventName: string = '';
     let newAddress: string = '';
     let newEventDate: string = '';
     let newLink: string = '';
     let newImage: File | null = null;
+    let editEventName: string = '';
     let editLiveId: number | null = null;
     let editAddress: string = '';
     let editEventDate: string = '';
@@ -45,6 +48,7 @@
 
     async function addLive(): Promise<void> {
         const formData = new FormData();
+        formData.append('event_name', newEventName);
         formData.append('address', newAddress);
         formData.append('event_date', newEventDate);
         formData.append('link', newLink);
@@ -61,6 +65,7 @@
             if (response.ok) {
                 console.log('Live event added successfully');
                 await fetchLive();
+                newEventName = '';
                 newAddress = '';
                 newEventDate = '';
                 newLink = '';
@@ -96,6 +101,7 @@
 
     function startEdit(item: LiveItem): void {
         editLiveId = item.id;
+        editEventName = item.event_name;
         editAddress = item.address;
         editEventDate = item.event_date;
         editLink = item.link;
@@ -107,6 +113,7 @@
         if (editLiveId === null) return;
 
         const formData = new FormData();
+        formData.append('event_name', editEventName);
         formData.append('address', editAddress);
         formData.append('event_date', editEventDate);
         formData.append('link', editLink);
@@ -125,6 +132,7 @@
             if (response.ok) {
                 await fetchLive();
                 editLiveId = null;
+                editEventName = '';
                 editAddress = '';
                 editEventDate = '';
                 editLink = '';
@@ -146,6 +154,7 @@
 
     <h2>Add Live Event</h2>
     <div class="form">
+        <input type="text" bind:value={newEventName} placeholder="Event Name" />
         <input type="text" bind:value={newAddress} placeholder="Address" />
         <input type="date" bind:value={newEventDate} placeholder="Event Date" />
         <input type="text" bind:value={newLink} placeholder="Link" />
@@ -156,6 +165,7 @@
     {#if editLiveId !== null}
         <h2>Edit Live Event</h2>
         <div class="form">
+            <input type="text" bind:value={editEventName} placeholder="Event Name" />
             <input type="text" bind:value={editAddress} placeholder="Address" />
             <input type="date" bind:value={editEventDate} placeholder="Event Date" />
             <input type="text" bind:value={editLink} placeholder="Link" />
@@ -163,53 +173,46 @@
             <button on:click={updateLive}>Update</button>
             <button on:click={() => { editLiveId = null; previewImage = null; }}>Cancel</button>
         </div>
-        <div class="preview">
-            <h3>{editAddress}</h3>
+        <div class="form">
+            <h3>{editEventName}</h3>
             {#if previewImage}
                 <img src={previewImage} alt="Preview" />
             {:else}
                 <img src={`http://localhost:3000${editImage}`} alt="Preview" />
             {/if}
+            <p>{editAddress}</p>
             <p>{editEventDate}</p>
-            <p>{editLink}</p>
+            <button on:click={() => window.open(editLink)}>Link</button>
+            <!-- <p>{editLink}</p> -->
         </div>
     {/if}
 
-    <ul>
-        {#each live as item}
-            <li>
-                <h3>{item.address}</h3>
-                <img src={`http://localhost:3000${item.image}`} alt={item.address} />
-                <p>{item.event_date}</p>
-                <!-- <p>{item.link}</p> -->
-                <button on:click={() => window.open(item.link)}>Link</button>
-                <button on:click={() => startEdit(item)}>Edit</button>
-                <button on:click={() => deleteLive(item.id)}>Delete</button>
-            </li>
-        {/each}
-    </ul>
+    <div class="adminContainer">
+        <ul>
+            {#each live as item}
+                <li class="liveList">
+                    <div id="liveInfoTop">
+                        <img src={`http://localhost:3000${item.image}`} alt={item.address} />
+                    </div>
+                    <div id="liveInfoMiddle">
+                        <h3>{item.event_name}</h3>
+                        <p>{item.address}</p>
+                    </div>
+                    <div id="liveInfoBottom">
+                        <h4>{item.event_date}</h4>
+                    <!-- <p>{item.link}</p> -->
+                        <button on:click={() => window.open(item.link)}>Link</button>
+                    </div>
+                </li>
+                <div class="adminBtn">
+                    <button on:click={() => startEdit(item)}>Edit</button>
+                    <button on:click={() => deleteLive(item.id)}>Delete</button>
+                </div>
+            {/each}
+        </ul>
+    </div>
 </main>
 
 <style>
-    @import "../../../style/adminStyle.scss"
-    /* main {
-        padding: 1rem;
-    }
-    input, textarea {
-        display: block;
-        margin-bottom: 1rem;
-        width: 100%;
-        color: black;
-    }
-    button {
-        margin-right: 1rem;
-    }
-    img {
-        max-width: 100px;
-        display: block;
-    }
-    .preview img {
-        max-width: 200px;
-        display: block;
-    } */
+    @import "../../../style/adminStyle.scss";
 </style>

@@ -17,7 +17,8 @@ db.serialize(() => {
         title TEXT,
         image TEXT,
         content TEXT,
-        date TEXT
+        date TEXT,
+        link TEXT
         )`);
 
     // table live
