@@ -34,7 +34,7 @@
 </main>
 
 <style lang="scss">
-    // @import "../style/style.scss";
+    @import "../style/style.scss";
 
 
 </style>

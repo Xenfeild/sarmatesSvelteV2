@@ -3,9 +3,13 @@ const sqlite3 = require('sqlite3').verbose();
 const cors = require('cors');
 const path = require('path');
 const multer = require('multer'); // Importer multer
+const jwt = require('jsonwebtoken');
+const argon2 = require('argon2');
+require('dotenv').config();
 
 const app = express();
 const port = process.env.PORT || 3000;
+const secretKey = process.env.JWT_SECRET || 'your_secret_key';
 
 // Configuration de multer pour le téléchargement des images
 const storage = multer.diskStorage({
@@ -41,12 +45,50 @@ const db = new sqlite3.Database(dbPath, (err) => {
     console.log('Connecté à la base de données SQLite');
 });
 
+// Middleware pour vérifier le token JWT
+function authenticateToken(req, res, next) {
+    const token = req.headers['authorization'];
+    if (!token) return res.sendStatus(401);
 
-// News table
+    jwt.verify(token, secretKey, (err, user) => {
+        if (err) return res.sendStatus(403);
+        req.user = user;
+        next();
+    });
+}
+
+
+// Route pour gérer la connexion
+app.post('/api/login', (req, res) => {
+    const { username, password } = req.body;
+    const sql = 'SELECT * FROM users WHERE username = ?';
+    db.get(sql, [username], (err, user) => {
+        if (err) return res.status(500).json({ error: err.message });
+        if (!user) return res.status(401).json({ error: 'Invalid username or password' });
+
+        argon2.verify(user.password, password).then(match => { // Utiliser argon2.verify
+            if (!match) return res.status(401).json({ error: 'Invalid username or password' });
+
+            const token = jwt.sign({ username: user.username }, secretKey, { expiresIn: '1h' });
+            res.json({ token });
+        }).catch(err => {
+            res.status(500).json({ error: err.message });
+        });
+    });
+});
+
+// Routes protégées par l'authentification
+app.use('/api/admin', authenticateToken);
+
+// ******** CRUD opérations ********
+
+
+// ******** News table ********
 
 
 // Route pour récupérer tous les articles de news
 app.get('/api/news', (req, res) => {
+    const limit = req.query.limit ? `LIMIT ${req.query.limit}` : '';
     db.all('SELECT * FROM news ORDER BY date DESC', [], (err, rows) => {
         if (err) {
             res.status(500).json({ error: err.message });
@@ -123,10 +165,11 @@ app.delete('/api/news/:id', (req, res) => {
 });
 
 
-// Live table
+// ******* Live table ********
 
 // Route pour récupérer tous les événements live
 app.get('/api/live', (req, res) => {
+    const limit = req.query.limit ? `LIMIT ${req.query.limit}` : '';
     db.all('SELECT * FROM live ORDER BY event_date DESC', [], (err, rows) => {
         if (err) {
             res.status(500).json({ error: err.message });
@@ -196,7 +239,7 @@ app.delete('/api/live/:id', (req, res) => {
 });
 
 
-// Presse
+// ******* Presse table ********
 
 // Add press
 app.post('/api/press', upload.single('image'), (req, res) => {
@@ -214,6 +257,7 @@ app.post('/api/press', upload.single('image'), (req, res) => {
 
 // Route pour récupérer tous les articles de presse
 app.get('/api/press', (req, res) => {
+    const limit = req.query.limit ? `LIMIT ${req.query.limit}` : '';
     const sql = `SELECT * FROM press`;
     db.all(sql, [], (err, rows) => {
         if (err) {

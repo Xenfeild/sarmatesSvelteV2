@@ -1,5 +1,6 @@
 <script lang="ts">
     import { onMount } from 'svelte';
+	import AdminHeader from '../../../components/adminHeader.svelte';
 
     interface LiveItem {
         id: number;
@@ -150,6 +151,7 @@
 </script>
 
 <main>
+    <AdminHeader />
     <h1>Live Events</h1>
 
     <h2>Add Live Event</h2>
@@ -213,6 +215,6 @@
     </div>
 </main>
 
-<style>
+<style lang="scss">
     @import "../../../style/adminStyle.scss";
 </style>

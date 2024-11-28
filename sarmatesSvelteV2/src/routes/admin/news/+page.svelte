@@ -1,5 +1,6 @@
 <script lang="ts">
     import { onMount } from 'svelte';
+	import AdminHeader from '../../../components/adminHeader.svelte';
 
     interface NewsItem {
         id: number;
@@ -135,6 +136,7 @@
 </script>
 
 <main>
+    <AdminHeader />
     <h1>Actualité</h1>
 
     <h2>Ajouter actualité</h2>

@@ -1,5 +1,6 @@
 <script lang="ts">
     import { onMount } from 'svelte';
+	import AdminHeader from '../../../components/adminHeader.svelte';
 
     interface PressItem {
         id: number;
@@ -149,6 +150,7 @@
 </script>
 
 <main>
+    <AdminHeader />
     <h1>Presse</h1>
 
     <h2>Ajouter article de presse</h2>
@@ -163,6 +165,7 @@
     {#if editId !== null}
         <h2>Editer article de presse</h2>
         <div class="form">
+            
             <input type="text" bind:value={editTitle} placeholder="Title" />
             <input type="file" accept="image/*" on:change={selectImage} />
             <textarea bind:value={editContent} placeholder="Content"></textarea>
@@ -171,14 +174,14 @@
         </div>
     {/if}
 
-    <ul>
+    <ul class="form">
         {#each press as item}
             <li>
                 <h2>{item.title}</h2>
                 <img src={`http://localhost:3000${item.image}`} alt={item.title} />
                 <p>{item.content}</p>
                 <p>{item.date}</p>
-                <a href={item.link} target="_blank">Read more</a>
+                <a href={item.link} target="_blank">Voir l'article au complet</a>
                 <button on:click={() => editPress(item)}>Edit</button>
                 <button on:click={() => deletePress(item.id)}>Delete</button>
             </li>
