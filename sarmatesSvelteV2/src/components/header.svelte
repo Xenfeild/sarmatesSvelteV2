@@ -46,8 +46,10 @@
   
   </style>
   
-  <header> 
-    <img src="{sarmatesLogo}" alt="logo">
+  <header>
+    <a href="#home">
+      <img src="{sarmatesLogo}" alt="logo">
+    </a>
     <!-- button nav -->
     <button class="burger-menu" on:click={toggleNav}>
       <svg class="hb" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 10" stroke="#eee" stroke-width=".6" fill="rgba(0,0,0,0)" stroke-linecap="round" style="cursor: pointer">
@@ -66,11 +68,12 @@
     </button>
     <nav class="{isNavVisible ? 'navVisible' : ''}">
       <ul>
-        <li>{$translations.news}</li>
-        <li>{$translations.live}</li>
-        <li>{$translations.biography}</li>
-        <li>{$translations.discography}</li>
-        <li>{$translations.galleries}</li>
+        <li><a href="#news">{$translations.news}</a></li>
+        <li><a href="#live">{$translations.live}</a></li>
+        <li><a href="#press">{$translations.press}</a></li>
+        <li><a href="#biography">{$translations.biography}</a></li>
+        <li><a href="#discography">{$translations.discography}</a></li>
+        <li><a href="#galleries">{$translations.galleries}</a></li>
         <li class="legal-mention">{$translations.legalMentions}</li>
         <div class="language-selector">
           <img src={selectedFlag} alt="Selected Language" class="selected">

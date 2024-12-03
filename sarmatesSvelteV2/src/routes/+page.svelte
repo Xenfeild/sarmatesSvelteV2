@@ -5,6 +5,7 @@
     import { translations, loadTranslations } from '../stores/translationStore';
     import News from "../components/News.svelte";
     import Live from "../components/Live.svelte";
+    import Press from "../components/Press.svelte";
     import Biography from "../components/Biography.svelte";
     import Discography from "../components/Discography.svelte";
     import Galeries from "../components/Galeries.svelte";
@@ -24,9 +25,12 @@
 
 <main>
     <Header/>
-    <CarousselHero />
+    <section id="home">
+        <CarousselHero />
+    </section>
     <News />
     <Live />
+    <Press />
     <Biography />
     <Discography />
     <Galeries />

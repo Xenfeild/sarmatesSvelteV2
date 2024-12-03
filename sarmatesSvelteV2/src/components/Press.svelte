@@ -4,68 +4,70 @@
     import Card from "./Cards.svelte";
     import Modal from "./Modal.svelte";
 
-    interface NewsItem {
+    interface PressItem {
         id: number;
         title: string;
         image: string;
         content: string;
         date: string;
+        link: string;
     }
 
-    let news: NewsItem[] = [];
-    let selectedNews: NewsItem | null = null;
+    let press: PressItem[] = [];
+    let selectedPress: PressItem | null = null;
 
-    async function fetchNews(): Promise<void> {
+    async function fetchPress(): Promise<void> {
         try {
-            const response = await fetch('http://localhost:3000/api/news');
+            const response = await fetch('http://localhost:3000/api/press');
             if (response.ok) {
-                news = await response.json();
+                press = await response.json();
             } else {
-                console.error('Failed to fetch news:', response.statusText);
+                console.error('Failed to fetch press:', response.statusText);
             }
         } catch (error) {
-            console.error('Error fetching news:', error);
+            console.error('Error fetching press:', error);
         }
     }
 
-    function selectNews(item: NewsItem) {
-        selectedNews = item;
+    function selectPress(item: PressItem) {
+        selectedPress = item;
     }
 
     function closeModal() {
-        selectedNews = null;
+        selectedPress = null;
     }
 
     onMount(() => {
         const userLang = navigator.language || navigator.language;
         const lang = userLang.split('-')[0]; // 'fr', 'en', 'es'
         loadTranslations(lang);
-        fetchNews();
+        fetchPress();
     });
 </script>
 
-<section id="news">
-    <h2>{$translations.news}</h2>
+<section id="press">
+    <h2>{$translations.press}</h2>
     <div class="content">
-        <ul class="news-list">
-            {#each news as item}
+        <ul class="press-list">
+            {#each press as item}
                 <Card 
                     title={item.title}
                     image={`http://localhost:3000${item.image}`}
                     content={item.content}
-                    onClick={() => selectNews(item)}
+                    onClick={() => selectPress(item)}
                 />
             {/each}
         </ul>
     </div>
 
 
-    {#if selectedNews}
+    {#if selectedPress}
         <Modal 
-            title={selectedNews.title}
-            image={`http://localhost:3000${selectedNews.image}`}
-            content={selectedNews.content}
-            date={selectedNews.date}
+            title={selectedPress.title}
+            image={`http://localhost:3000${selectedPress.image}`}
+            content={selectedPress.content}
+            date={selectedPress.date}
+            link={selectedPress.link}
             onClose={closeModal}
         />
     {/if}
@@ -74,7 +76,7 @@
 <style lang="scss">
     @import "../style/style.scss";
 
-    .news-list {
+    .press-list {
         display: flex;
         flex-wrap: wrap;
         justify-content: center;

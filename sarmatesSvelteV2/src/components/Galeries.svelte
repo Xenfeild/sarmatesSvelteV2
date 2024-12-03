@@ -9,7 +9,7 @@
     });
 </script>
 
-<section class="galleries">
+<section id="galleries">
     <h2>{$translations.galleries}</h2>
 </section>
 
