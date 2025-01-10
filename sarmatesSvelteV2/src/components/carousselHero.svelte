@@ -38,23 +38,38 @@
     let interval: number;
 
     onMount(() => {
+        console.log('Component mounted');
         loadTranslations('en'); // load translations default language
         adjustPaths();
         startCarousel();
-        window.addEventListener('resize', adjustPaths); // Ajouter un écouteur d'événement pour ajuster les chemins lors du redimensionnement de la fenêtre
-        return () => {
-            clearInterval(interval);
-            window.removeEventListener('resize', adjustPaths);
-        };
+        // window.addEventListener('resize', debounce(adjustPaths, 200)); // Ajouter un écouteur d'événement pour ajuster les chemins lors du redimensionnement de la fenêtre
+        // return () => {
+            // clearInterval(interval);
+            // window.removeEventListener('resize', debounce(adjustPaths, 200));
+        // };
     });
 
-    function adjustPaths() {
-        const basePath = window.innerWidth < 785 ? '../src/lib/img/m/' : '../src/lib/img/';
-        items = items.map(item => ({
-            ...item,
-            src: `${basePath}${item.src}`
-        }));
+
+    function debounce(func: (...args: any[]) => void, wait: number) {
+        let timeout: number | undefined;
+        return (...args: any[]) => {
+            clearTimeout(timeout);
+            timeout = window.setTimeout(() => func(...args), wait);
+        };
     }
+
+    function adjustPaths() {
+    const basePath = window.innerWidth < 785 ? '../src/lib/img/m/' : '../src/lib/img/';
+    const timestamp = new Date().getTime();
+    items = items.map(item => {
+        const newSrc = `${basePath}${item.src}?t=${timestamp}`;
+        console.log(`Adjusting path for ${item.src} to ${newSrc}`);
+        return {
+            ...item,
+            src: newSrc
+        };
+    });
+}
 
     function startCarousel() {
         interval = setInterval(() => {
@@ -72,7 +87,7 @@
 
 <section class="carousel">
     <div class="carousel-inner">
-        {#each items as item, index}
+        {#each items as item , index}
             <div class="carousel-item { $currentIndex === index ? 'active' : '' }">
                 {#if item.type === 'image'}
                     <img src={item.src} alt={item.alt} />

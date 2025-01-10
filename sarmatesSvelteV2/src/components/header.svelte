@@ -1,8 +1,8 @@
 <script lang="ts">
     import sarmatesLogo from "/src/lib/img/logo/logo_sarmates_modified.svg";
-    import frenchFlag from "/src/lib/img/icons8-france-circulaire-48.png";
-    import englishFlag from "/src/lib/img/icons8-anglais-48.png";
-    import spanishFlag from "/src/lib/img/icons8-espagne2-circulaire-48.png";
+    import frenchFlag from "/src/lib/img/icons8-france-circulaire-48.webp";
+    import englishFlag from "/src/lib/img/icons8-anglais-48.webp";
+    import spanishFlag from "/src/lib/img/icons8-espagne2-circulaire-48.webp";
     // import { createEventDispatcher } from "svelte";
     import { translations, loadTranslations } from "../stores/translationStore";
     import { onMount } from 'svelte';
@@ -47,7 +47,7 @@
   </style>
   
   <header>
-    <a href="#home">
+    <a href="/">
       <img src="{sarmatesLogo}" alt="logo">
     </a>
     <!-- button nav -->

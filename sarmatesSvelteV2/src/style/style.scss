@@ -68,7 +68,7 @@ h2 {
 
 p {
     font-family: $title-font;
-    font-weight: 400;
+    font-weight: 500;
 }
 
 section {
@@ -137,21 +137,23 @@ button  {
 }
 
 #press{
-    background-color: $primary-color;
+    background-image: url(../lib/img/back_sarmates.webp);
+    background-attachment: fixed;
 }
 
 #biography{
     background-image: url(../lib/img/Sarmates_shoot-29.webp);
-    background-attachment: fixed;
+    // background-attachment: fixed;
 }
 
 #discography{
     background-image: url(../lib/img/BRASSERIE_DE_LAPOCALYPSE_LOGO-2.webp);
+    background-attachment: fixed;
 }
 
 #galleries{
     background-image: url(../lib/img/Sarmates_fest_logo-29.webp);
-    background-attachment: fixed;
+    // background-attachment: fixed;
 }
 
 @media (min-with: 785px){

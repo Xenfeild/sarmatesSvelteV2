@@ -54,6 +54,7 @@
         margin: 1rem  0;
         text-align: center;
         color: $secondary-color;
+        font-family: $title-font;
     }
 
     .role {

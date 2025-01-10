@@ -25,7 +25,7 @@
 
 <main>
     <Header/>
-    <section id="home">
+    <section id="/">
         <CarousselHero />
     </section>
     <News />
