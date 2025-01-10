@@ -1,6 +1,7 @@
 <script>
     import { onMount } from "svelte";
     import { translations, loadTranslations } from '../stores/translationStore';
+    import Carousel from "./Carousel.svelte";
 
     onMount(() => {
         const userLang = navigator.language || navigator.language;
@@ -26,7 +27,7 @@
         </div>
         <h3>Photo</h3>
         <div id="photo">
-
+            <Carousel/>
         </div>
     </div>
 </section>
@@ -37,6 +38,7 @@
     .content {
         flex-direction: column;
         align-items: space-around;
+        padding-bottom: 5rem;
     }
 
     #clip {
