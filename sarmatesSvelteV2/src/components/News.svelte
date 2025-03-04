@@ -43,8 +43,6 @@
         fetchNews();
     });
 </script>
-
-<section id="news">
     <h2>{$translations.news}</h2>
     <div class="content">
         <ul class="news-list">
@@ -69,7 +67,6 @@
             onClose={closeModal}
         />
     {/if}
-</section>
 
 <style lang="scss">
     @import "../style/style.scss";

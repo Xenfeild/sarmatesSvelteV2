@@ -45,7 +45,7 @@
             content: $translations.sarmataBio
         },
         {
-            name: "Gün",
+            name: "Victor Poulain",
             image: "src/lib/img/guitar_bio.webp",
             role: $translations.guitar,
             content: $translations.guitarBio

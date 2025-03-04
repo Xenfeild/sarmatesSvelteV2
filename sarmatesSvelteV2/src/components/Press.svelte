@@ -1,8 +1,8 @@
 <script lang="ts">
     import { onMount } from "svelte";
     import { translations, loadTranslations } from '../stores/translationStore';
-    import Card from "./Cards.svelte";
-    import Modal from "./Modal.svelte";
+    import Card from "./CardsPress.svelte";
+
 
     interface PressItem {
         id: number;
@@ -14,7 +14,6 @@
     }
 
     let press: PressItem[] = [];
-    let selectedPress: PressItem | null = null;
 
     async function fetchPress(): Promise<void> {
         try {
@@ -29,13 +28,6 @@
         }
     }
 
-    function selectPress(item: PressItem) {
-        selectedPress = item;
-    }
-
-    function closeModal() {
-        selectedPress = null;
-    }
 
     onMount(() => {
         const userLang = navigator.language || navigator.language;
@@ -45,33 +37,19 @@
     });
 </script>
 
-<section id="press">
-    <h2>{$translations.press}</h2>
-    <div class="content">
-        <ul class="press-list">
-            {#each press as item}
-                <Card 
-                    title={item.title}
-                    image={`http://localhost:3000${item.image}`}
-                    content={item.content}
-                    onClick={() => selectPress(item)}
-                />
-            {/each}
-        </ul>
-    </div>
-
-
-    {#if selectedPress}
-        <Modal 
-            title={selectedPress.title}
-            image={`http://localhost:3000${selectedPress.image}`}
-            content={selectedPress.content}
-            date={selectedPress.date}
-            link={selectedPress.link}
-            onClose={closeModal}
-        />
-    {/if}
-</section>
+<h2>{$translations.press}</h2>
+<div class="content">
+    <ul class="press-list">
+        {#each press as item}
+            <Card
+                title={item.title}
+                image={item.image}
+                content={item.content}
+                link={item.link}
+            />
+        {/each}
+    </ul>
+</div>
 
 <style lang="scss">
     @import "../style/style.scss";

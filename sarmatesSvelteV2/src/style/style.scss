@@ -58,7 +58,7 @@ main {
 
 h2 {
     font-family: $title-font;
-    font-size: clamp(22px, 10vw, 3rem);
+    font-size: clamp(22px, 10vw, 2.5rem);
     font-weight: 400;
     text-shadow: 4px 4px 3px #000000;
     color: $secondary-color;
@@ -134,7 +134,13 @@ button  {
 
 #live{
     background-image: url(../lib/img/BRASSERIE_DE_LAPOCALYPSE-3.webp);
+    .link {
+        display: flex;
+        justify-content: center;
+    }
+    padding: 2rem;
 }
+
 
 #press{
     background-image: url(../lib/img/back_sarmates.webp);

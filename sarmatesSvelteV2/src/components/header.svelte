@@ -68,12 +68,12 @@
     </button>
     <nav class="{isNavVisible ? 'navVisible' : ''}">
       <ul>
-        <li><a href="#news">{$translations.news}</a></li>
-        <li><a href="#live">{$translations.live}</a></li>
-        <li><a href="#press">{$translations.press}</a></li>
-        <li><a href="#biography">{$translations.biography}</a></li>
-        <li><a href="#discography">{$translations.discography}</a></li>
-        <li><a href="#galleries">{$translations.galleries}</a></li>
+        <li><a href="/#news">{$translations.news}</a></li>
+        <li><a href="/#live">{$translations.live}</a></li>
+        <li><a href="/#press">{$translations.press}</a></li>
+        <li><a href="/#biography">{$translations.biography}</a></li>
+        <li><a href="/#discography">{$translations.discography}</a></li>
+        <li><a href="/#galleries">{$translations.galleries}</a></li>
         <li class="legal-mention">{$translations.legalMentions}</li>
         <div class="language-selector">
           <img src={selectedFlag} alt="Selected Language" class="selected">

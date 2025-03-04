@@ -2,27 +2,24 @@
     export let title: string;
     export let image: string;
     export let content: string;
-    export let onClick: () => void;
-
-    function handleKeydown(event: KeyboardEvent) {
-        if (event.key === 'Enter') {
-            onClick();
-        }
-    }
-
+    export let link: string;
+    
     function getExcerpt(content: string, length: number = 50): string {
         if (!content) return '';
         return content.length > length ? content.substring(0, length) + '...' : content;
     }
 </script>
 
-<div class="card" tabindex="0" on:click={onClick} on:keydown={handleKeydown}>
+
+<!-- <div class="card" tabindex="0" on:click={onClick} on:keydown={handleKeydown}> -->
+<a class="card" href={link} target="_blank" tabindex="0">
     <h3>{title}</h3>
     <div class="imgBox">
         <img src={image} alt={title} />
     </div>
     <p class="excerpt">{getExcerpt(content)}</p>
-</div>
+</a>
+<!-- </div> -->
 
 <style lang="scss">
     @import '../style/style.scss';
@@ -51,7 +48,7 @@
              width: 100%;
              height: 100%;
              border-radius: 4px;
-             object-fit: cover;
+             object-fit: contain;
         }
         }
             

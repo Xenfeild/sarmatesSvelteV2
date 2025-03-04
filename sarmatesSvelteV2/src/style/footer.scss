@@ -19,13 +19,7 @@ footer {
         color: $secondary-color;
         display: flex;
         justify-content: space-around;
-
-        & :hover {
-            color: $third-color;
-        }
-    }
-
-    i {
+        i {
         color: $secondary-color;
         font-size: 1.2rem;
     }
@@ -34,13 +28,20 @@ footer {
         font-size: 1.2rem;
     }
 
+        & :hover {
+            color: $third-color;
+        }
+    }
+
+    
+
     .newsletter {
         font-size: $font-size2;
         font-weight: 400;
         width: 100%;
         display: flex;
         flex-wrap: wrap;
-        justify-content: center;
+        justify-content: space-between;
         align-items: center;
         color: $third-color;
 

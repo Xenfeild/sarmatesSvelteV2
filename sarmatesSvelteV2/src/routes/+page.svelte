@@ -15,8 +15,11 @@
         const userLang = navigator.language || navigator.language;
         const lang = userLang.split('-')[0]; // 'fr', 'en', 'es'
         loadTranslations(lang);
+
+        
     });
 
+    
     // function changeLanguage(lang: string) {
     //     loadTranslations(lang);
     // }
@@ -28,17 +31,34 @@
     <section id="/">
         <CarousselHero />
     </section>
-    <News />
-    <Live />
-    <Press />
-    <Biography />
-    <Discography />
-    <Galeries />
+    <section id="news">
+        <News />
+    </section>
+    <section id="live">
+        <Live />
+        <div class="link">
+            <a href="live">
+                <button>{$translations.allLive}</button>
+            </a>
+        </div>
+    </section>
+    <section id="press">
+        <Press />
+    </section>
+    <section id="biography">
+        <Biography />
+    </section>
+    <section id="discography">
+        <Discography />
+    </section>
+    <section class="galeries">
+        <Galeries />
+    </section>
     <Footer />
 </main>
 
 <style lang="scss">
     @import "../style/style.scss";
-
+    
 
 </style>

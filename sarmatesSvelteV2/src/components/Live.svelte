@@ -31,36 +31,36 @@
     });
 </script>
 
-<section id="live">
-    <h2>{$translations.live}</h2>
-    <div class="content">
-        <div class="container">
-            {#each liveItems as item}
-                <div class="liveItem">
-                    <div class="top">
-                        <img src={item.image} alt={item.event_name} />
-                    </div>
-                    <div class="middle">
-                        <h2>{item.event_name}</h2>
-                        <p>{item.address}</p>
-                    </div>
-                    <div class="bottom">
-                        <p>{item.event_date}</p>
-                        <a href={item.link} target="_blank">
-                            <button>{$translations.seeEvent}</button>
-                        </a>
-                    </div>
+<h2>{$translations.live}</h2>
+<div class="content">
+    <div class="container">
+        {#each liveItems.slice(0, 3) as item}
+            <div class="liveItem">
+                <div class="top">
+                    <img src={item.image} alt={item.event_name} />
                 </div>
-            {/each}
-        </div>
+                <div class="middle">
+                    <h2>{item.event_name}</h2>
+                    <p>{item.address}</p>
+                </div>
+                <div class="bottom">
+                    <p>{item.event_date}</p>
+                    <a href={item.link} target="_blank">
+                        <button>{$translations.seeEvent}</button>
+                    </a>
+                </div>
+            </div>
+        {/each}
     </div>
-</section>
+</div>
+
 
 <style lang="scss">
     @import "../style/style.scss";
     .container{
         width: 90%;
         padding: 4rem;
+        margin-bottom: 3rem;
     }
 
     .liveItem {
