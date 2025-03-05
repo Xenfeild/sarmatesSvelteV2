@@ -43,7 +43,7 @@
     }
   </script>
   
-  <style>
+  <style lang="scss">
     @import "../style/style.scss";
     .carousel {
       display: flex;
@@ -61,6 +61,11 @@
       width: 100%;
       display: block;
       object-fit: cover;
+      cursor: pointer;
+      &:hover{
+        border: 10px;
+        border-color: #ff9634;
+      }
     }
     .carousel-buttons {
       position: absolute;

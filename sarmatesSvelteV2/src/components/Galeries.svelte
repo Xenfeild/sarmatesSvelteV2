@@ -17,11 +17,11 @@
         <div id="clip">
             <div class="video">
                 <h4>Kötüyüm</h4>
-                <iframe src="https://www.youtube.com/embed/PmH27yiXOk0?si=XMyQlidhVp1RSsFz" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                <!-- <iframe src="https://www.youtube.com/embed/PmH27yiXOk0?si=XMyQlidhVp1RSsFz" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe> -->
             </div>
             <div class="video">
                 <h4>Legion</h4>
-                <iframe src="https://www.youtube.com/embed/VF_lY4yQNVU?si=WiRwkt7kxkqElJN_" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                <!-- <iframe src="https://www.youtube.com/embed/VF_lY4yQNVU?si=WiRwkt7kxkqElJN_" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe> -->
             </div>
 
         </div>

@@ -15,16 +15,8 @@
         const userLang = navigator.language || navigator.language;
         const lang = userLang.split('-')[0]; // 'fr', 'en', 'es'
         loadTranslations(lang);
-
-        
     });
-
-    
-    // function changeLanguage(lang: string) {
-    //     loadTranslations(lang);
-    // }
 </script>
-
 
 <main>
     <Header/>
@@ -59,6 +51,4 @@
 
 <style lang="scss">
     @import "../style/style.scss";
-    
-
 </style>
