@@ -30,23 +30,35 @@
 
 <main>
     <h1>Admin Login</h1>
-    <form on:submit|preventDefault={login}>
-        <label for="username">Username</label>
-        <input type="text" id="username" bind:value={username} required />
-        
-        <label for="password">Password</label>
-        <input type="password" id="password" bind:value={password} required />
-        
-        {#if errorMessage}
-            <p class="error">{errorMessage}</p>
-        {/if}
-        
-        <button type="submit">Login</button>
-    </form>
+    <div class="form">
+        <form on:submit|preventDefault={login}>
+            <label for="username">Username</label>
+            <input type="text" id="username" bind:value={username} required />
+            
+            <label for="password">Password</label>
+            <input type="password" id="password" bind:value={password} required />
+            
+            {#if errorMessage}
+                <p class="error">{errorMessage}</p>
+            {/if}
+            
+            <button type="submit">Login</button>
+        </form>
+    </div>
 </main>
 
 <style lang="scss">
     @import "../../../style/adminStyle.scss";
+
+    .form{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        height: 95vh;
+        justify-content: center;
+        font-family: $title-font;
+        
+    }
     .error {
         color: red;
     }

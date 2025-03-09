@@ -3,6 +3,7 @@
     export let image: string;
     export let content: string;
     export let link: string;
+    export let onClick: () => void;
     
     function getExcerpt(content: string, length: number = 50): string {
         if (!content) return '';
