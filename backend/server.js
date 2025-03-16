@@ -2,14 +2,54 @@ const express = require('express');
 const sqlite3 = require('sqlite3').verbose();
 const cors = require('cors');
 const path = require('path');
-const multer = require('multer'); // Importer multer
+const multer = require('multer'); // Import multer
 const jwt = require('jsonwebtoken');
 const argon2 = require('argon2');
+const sharp = require('sharp'); // Import sharp
+const nodemailer = require('nodemailer');
 require('dotenv').config();
 
 const app = express();
 const port = process.env.PORT || 3000;
 const secretKey = process.env.JWT_SECRET || 'your_secret_key';
+
+
+//  ***** mailing function *****
+
+//  nodemailer Configuration
+const transporter = nodemailer.createTransport({
+    host: 'smtp.hostinger.com',
+    port: 587,
+    secure: false,
+    auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
+    }
+});
+
+// routes for mailing
+app.post('/send-email', (req, res) => {
+    const { firstName, lastName, email, company, message } = req.body;
+
+    const mailOptions = {
+        from: email,
+        to: process.env.EMAIL_USER,
+        subject: 'Contact Form Submission',
+        text: "Name: ${firstName} ${lastName}\nEmail: ${email}\nCompany: ${company}\nMessage: ${message}"
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            console.log(error);
+            res.status(500).json({ error: 'Internal Server Error' });
+        } else {
+            console.log('Email sent: ' + info.response);
+            res.status(200).json({ message: 'Email sent' });
+        }
+    });
+});
+
+// ******** Routes download ********
 
 // Configuration de multer pour le téléchargement des images
 const storage = multer.diskStorage({
@@ -196,9 +236,23 @@ app.get('/api/live/:id', (req, res) => {
 });
 
 // Route pour ajouter un nouvel événement live avec une image
-app.post('/api/live', upload.single('image'), (req, res) => {
+app.post('/api/live', upload.single('image'), async (req, res) => {
     const { event_name, address, event_date, link } = req.body;
-    const image = req.file ? `/uploads/image/${req.file.filename}` : null;
+    let image = null;
+
+    if (req.file) {
+        const outputPath = path.join(__dirname, 'uploads', 'image', `${Date.now()}.webp`);
+        try {
+            await sharp(req.file.path)
+                .resize(250, 340)
+                .toFormat('webp')
+                .toFile(outputPath);
+            image = `/uploads/image/${path.basename(outputPath)}`;
+        } catch (err) {
+            return res.status(500).json({ error: 'Error processing image' });
+        }
+    }
+
     db.run('INSERT INTO live (image, event_name, address, event_date, link) VALUES (?, ?, ?, ?, ?)', [image, event_name, address, event_date, link], function(err) {
         if (err) {
             res.status(500).json({ error: err.message });
@@ -209,10 +263,24 @@ app.post('/api/live', upload.single('image'), (req, res) => {
 });
 
 // Route pour mettre à jour un événement live
-app.put('/api/live/:id', upload.single('image'), (req, res) => {
+app.put('/api/live/:id', upload.single('image'), async (req, res) => {
     const { id } = req.params;
     const { event_name, address, event_date, link } = req.body;
-    const image = req.file ? `/uploads/image/${req.file.filename}` : req.body.image;
+    let image = req.body.image;
+
+    if (req.file) {
+        const outputPath = path.join(__dirname, 'uploads', 'image', `${Date.now()}.webp`);
+        try {
+            await sharp(req.file.path)
+                .resize(250, 340)
+                .toFormat('webp')
+                .toFile(outputPath);
+            image = `/uploads/image/${path.basename(outputPath)}`;
+        } catch (err) {
+            return res.status(500).json({ error: 'Error processing image' });
+        }
+    }
+
     db.run('UPDATE live SET image = ?, event_name = ?, address = ?, event_date = ?, link = ? WHERE id = ?', [image, event_name, address, event_date, link, id], function(err) {
         if (err) {
             res.status(500).json({ error: err.message });

@@ -14,9 +14,11 @@
             alt: 'Image 1', 
             text: 'caption1', 
             logos: [
-                { src: '../src/lib/img/spotify.png', alt: 'Spotify logo', url: 'https://open.spotify.com/intl-fr/artist/0W6mPvqyV2o6BxJsLh2u1N' },
-                { src: '../src/lib/img/deezer.png', alt: 'Deezer logo', url: 'https://www.deezer.com/fr/artist/270656742' },
-                { src: '../src/lib/img/bandcamp.png', alt: 'bandcamp logo', url: 'https://sarmates.bandcamp.com/album/sarmates?from=search&search_item_id=1280216646&search_item_type=a&search_match_part=%3F&search_page_id=3699891871&search_page_no=1&search_rank=1&search_sig=8d02d4a16dbc3663c3d0e7cfa4648846' }
+                { src: '../src/lib/img/spotify.webp', alt: 'Spotify logo', url: 'https://open.spotify.com/intl-fr/artist/0W6mPvqyV2o6BxJsLh2u1N' },
+                { src: '../src/lib/img/icons8-music-500.webp', alt: 'Apple_music logo', url: 'https://music.apple.com/fr/artist/sarmates/1753128367' },
+                { src: '../src/lib/img/deezer.webp', alt: 'Deezer logo', url: 'https://www.deezer.com/fr/artist/270656742' },
+                { src: '../src/lib/img/bandcamp.webp', alt: 'bandcamp logo', url: 'https://sarmates.bandcamp.com/album/sarmates?from=search&search_item_id=1280216646&search_item_type=a&search_match_part=%3F&search_page_id=3699891871&search_page_no=1&search_rank=1&search_sig=8d02d4a16dbc3663c3d0e7cfa4648846' },
+                { src: '../src/lib/img/icons8-youtube-500.webp', alt: 'youtube logo', url: 'https://www.youtube.com/channel/UCD7GKasfYOhxACI6XQZgUvw' }
             ]
         },
         { 
