@@ -13,7 +13,7 @@
 <section id="galleries">
     <h2>{$translations.galleries}</h2>
     <div class="content">
-        <h3>Clips</h3>
+        <h3>{$translations.clip}</h3>
         <div id="clip">
             <div class="video">
                 <h4>Kötüyüm</h4>
@@ -25,7 +25,7 @@
             </div>
 
         </div>
-        <h3>Photo</h3>
+        <h3>{$translations.photos}</h3>
         <div id="photo">
             <Carousel/>
         </div>

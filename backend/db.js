@@ -9,6 +9,7 @@ db.serialize(() => {
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         title TEXT,
         image TEXT,
+        thumbnail TEXT,
         content TEXT,
         date TEXT DEFAULT (datetime('now','localtime'))
         )`);

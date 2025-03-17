@@ -9,6 +9,7 @@
         id: number;
         title: string;
         image: string;
+        thumbnail: string;
         content: string;
         date: string;
     }
@@ -87,7 +88,7 @@
             <li>
                 <Cards 
                     title={item.title} 
-                    image={`http://localhost:3000${item.image}`} 
+                    thumbnail={`http://localhost:3000${item.thumbnail}`} 
                     content={item.content} 
                     onClick={() => openModal(item)} 
                 />
@@ -121,8 +122,8 @@
                 <li>
                     <Cards 
                         title={item.event_name} 
-                        image={`http://localhost:3000${item.image}`} 
-                        content={item.address} date={item.event_date} 
+                        thumbnail={`http://localhost:3000${item.image}`} 
+                        content={item.address} 
                         onClick={() => openModal(item)} 
                         />
                 </li>

@@ -108,7 +108,15 @@
         editLink = item.link;
         editImage = item.image;
         previewImage = `http://localhost:3000${item.image}`;
+
+        setTimeout(() => {
+            const editSection = document.getElementById('edit-section');
+            if (editSection) {
+                editSection.scrollIntoView({ behavior: 'smooth' });
+            }
+        }, 100); // Délai de 100ms
     }
+
 
     async function updateLive(): Promise<void> {
         if (editLiveId === null) return;
@@ -165,7 +173,7 @@
     </div>
 
     {#if editLiveId !== null}
-        <h2>Edit Live Event</h2>
+        <h2 id="edit-section">Edit Live Event</h2>
         <div class="form">
             <input type="text" bind:value={editEventName} placeholder="Event Name" />
             <input type="text" bind:value={editAddress} placeholder="Address" />

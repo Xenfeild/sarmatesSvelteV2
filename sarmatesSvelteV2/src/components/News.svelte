@@ -8,6 +8,7 @@
         id: number;
         title: string;
         image: string;
+        thumbnail: string;
         content: string;
         date: string;
     }
@@ -49,7 +50,7 @@
             {#each news as item}
                 <Card 
                     title={item.title}
-                    image={`http://localhost:3000${item.image}`}
+                    thumbnail={`http://localhost:3000${item.thumbnail}`}
                     content={item.content}
                     onClick={() => selectNews(item)}
                 />

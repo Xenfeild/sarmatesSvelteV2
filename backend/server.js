@@ -155,12 +155,35 @@ app.get('/api/news/:id', (req, res) => {
 });
 
 // Route pour ajouter un nouvel article de news avec une image
-app.post('/api/news', upload.single('image'), (req, res) => {
+app.post('/api/news', upload.single('image'), async (req, res) => {
     const { title, content } = req.body;
-    const image = req.file ? `/uploads/image/${req.file.filename}` : null;
-    console.log(`Received file: ${req.file ? req.file.filename : 'No file uploaded'}`);
-    console.log(`Image path: ${image}`);
-    db.run('INSERT INTO news (title, image, content) VALUES (?, ?, ?)', [title, image, content], function(err) {
+    let image = null;
+    let thumbnail = null;
+
+    if (req.file) {
+        const timestamp = Date.now();
+        const outputPath = path.join(__dirname, 'uploads', 'image', `${timestamp}.webp`);
+        const thumbnailPath = path.join(__dirname, 'uploads', 'image', 'thumbnail', `${timestamp}.webp`);
+        
+        try {
+            // Créer la version en taille réelle
+            await sharp(req.file.path)
+                .toFormat('webp')
+                .toFile(outputPath);
+            image = `/uploads/image/${path.basename(outputPath)}`;
+
+            // Créer la miniature
+            await sharp(req.file.path)
+                .resize(290, 250)
+                .toFormat('webp')
+                .toFile(thumbnailPath);
+            thumbnail = `/uploads/image/thumbnail/${path.basename(thumbnailPath)}`;
+        } catch (err) {
+            return res.status(500).json({ error: 'Error processing image' });
+        }
+    }
+
+    db.run('INSERT INTO news (title, image, thumbnail, content) VALUES (?, ?, ?, ?)', [title, image, thumbnail, content], function(err) {
         if (err) {
             console.error('Error inserting news:', err.message);
             res.status(500).json({ error: err.message });
@@ -171,11 +194,36 @@ app.post('/api/news', upload.single('image'), (req, res) => {
 });
 
 // Route pour mettre à jour un article de news
-app.put('/api/news/:id', upload.single('image'), (req, res) => {
+app.put('/api/news/:id', upload.single('image'), async (req, res) => {
     const { id } = req.params;
     const { title, content } = req.body;
-    const image = req.file ? `/uploads/image/${req.file.filename}` : req.body.image;
-    db.run('UPDATE news SET title = ?, image = ?, content = ? WHERE id = ?', [title, image, content, id], function(err) {
+    let image = req.body.image;
+    let thumbnail = req.body.thumbnail;
+
+    if (req.file) {
+        const timestamp = Date.now();
+        const outputPath = path.join(__dirname, 'uploads', 'image', `${timestamp}.webp`);
+        const thumbnailPath = path.join(__dirname, 'uploads', 'image', 'thumbnail', `${timestamp}.webp`);
+
+        try {
+            // Créer la version en taille réelle
+            await sharp(req.file.path)
+                .toFormat('webp')
+                .toFile(outputPath);
+            image = `/uploads/image/${path.basename(outputPath)}`;
+
+            // Créer la miniature
+            await sharp(req.file.path)
+                .resize(290, 250)
+                .toFormat('webp')
+                .toFile(thumbnailPath);
+            thumbnail = `/uploads/image/thumbnail/${path.basename(thumbnailPath)}`;
+        } catch (err) {
+            return res.status(500).json({ error: 'Error processing image' });
+        }
+    }
+
+    db.run('UPDATE news SET title = ?, image = ?, thumbnail = ?, content = ? WHERE id = ?', [title, image, thumbnail, content, id], function(err) {
         if (err) {
             res.status(500).json({ error: err.message });
             return;
@@ -240,6 +288,7 @@ app.post('/api/live', upload.single('image'), async (req, res) => {
     const { event_name, address, event_date, link } = req.body;
     let image = null;
 
+    // image compression precessing and rezising
     if (req.file) {
         const outputPath = path.join(__dirname, 'uploads', 'image', `${Date.now()}.webp`);
         try {

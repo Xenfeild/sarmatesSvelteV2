@@ -5,7 +5,7 @@
     import Header from "../../components/header.svelte";
 
     onMount(() => {
-        const userLang = navigator.language || navigator.userLanguage; // Assurez-vous que navigator.language est défini
+        const userLang = navigator.language || navigator.language; // Assurez-vous que navigator.language est défini
         const lang = userLang ? userLang.split('-')[0] : 'en'; // Utilisez 'en' comme langue par défaut si userLang est null
         if (lang) {
             loadTranslations(lang);

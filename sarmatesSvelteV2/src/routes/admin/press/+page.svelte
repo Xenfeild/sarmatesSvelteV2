@@ -82,6 +82,12 @@
         editImage = item.image;
         editContent = item.content;
         editLink = item.link;
+        setTimeout(() => {
+            const editSection = document.getElementById('edit-section');
+            if (editSection) {
+                editSection.scrollIntoView({ behavior: 'smooth' });
+            }
+        }, 100); // Délai de 100ms
     }
 
     async function updatePress(): Promise<void> {
@@ -163,7 +169,7 @@
     </div>
 
     {#if editId !== null}
-        <h2>Editer article de presse</h2>
+        <h2 id="edit-section">Editer article de presse</h2>
         <div class="form">
             
             <input type="text" bind:value={editTitle} placeholder="Title" />

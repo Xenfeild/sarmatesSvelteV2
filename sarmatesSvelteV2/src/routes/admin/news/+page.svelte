@@ -97,6 +97,14 @@
         editImage = item.image;
         editContent = item.content;
         previewImage = `http://localhost:3000${item.image}`;
+
+        // Faire défiler la page vers l'élément <h2>Editer Actualité</h2>
+        setTimeout(() => {
+            const editSection = document.getElementById('edit-section');
+            if (editSection) {
+                editSection.scrollIntoView({ behavior: 'smooth' });
+            }
+        }, 100); // Délai de 100ms
     }
 
     async function updateNews(): Promise<void> {
@@ -148,7 +156,7 @@
     </div>
 
     {#if editId !== null}
-        <h2>Editer Actualité</h2>
+    <h2 id="edit-section">Editer Actualité</h2>
         <div class="form">
             <h3>{editTitle}</h3>
             {#if previewImage}

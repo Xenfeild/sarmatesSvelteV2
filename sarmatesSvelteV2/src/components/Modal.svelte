@@ -2,7 +2,7 @@
     export let title: string;
     export let image: string;
     export let content: string;
-    export let date: string;
+    export let date: string | null = null;
     export let link: string | null = null;
     export let onClose: () => void;
 
@@ -20,8 +20,12 @@
         <div class="modal-body">
             <img src={image} alt={title} />
             <p>{content}</p>
-            <p>{date}</p>
-            <a href={link} target="_blank">{link}</a>
+            {#if date}
+                <p>{date}</p>
+            {/if}
+            {#if link}
+                <a href={link} target="_blank">{link}</a>
+            {/if}
         </div>
     </div>
 </div>

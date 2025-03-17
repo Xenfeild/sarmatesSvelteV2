@@ -59,6 +59,7 @@
     left: 50%;
     transform: translate(-50%, -50%);
     background: $fourth-color;
+    backdrop-filter: blur(5px);
     padding: 1rem;
     border-radius: 8px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);

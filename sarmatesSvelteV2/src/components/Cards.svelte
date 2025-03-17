@@ -1,6 +1,6 @@
 <script lang="ts">
     export let title: string;
-    export let image: string;
+    export let thumbnail: string;
     export let content: string;
     export let onClick: () => void;
 
@@ -19,7 +19,7 @@
 <div class="card" tabindex="0" on:click={onClick} on:keydown={handleKeydown}>
     <h3>{title}</h3>
     <div class="imgBox">
-        <img src={image} alt={title} />
+        <img src={thumbnail} alt={title} />
     </div>
     <p class="excerpt">{getExcerpt(content)}</p>
 </div>
