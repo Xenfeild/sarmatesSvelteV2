@@ -1,35 +1,35 @@
 <script>
     import { onMount } from 'svelte';
-    import { writable } from 'svelte/store';
-
-    const consentGiven = writable(false);
-    const nonEssentialCookiesAccepted = writable(false);
+    import { consentGiven, nonEssentialCookiesAccepted } from '../stores/cookies.js';
 
     onMount(() => {
         const consent = localStorage.getItem("cookieConsent");
         const nonEssentialConsent = localStorage.getItem("nonEssentialCookieConsent");
-        console.log("Consent from localStorage:", consent);
         if (consent === "true") {
             consentGiven.set(true);
+        } else {
+            consentGiven.set(false);
         }
         if (nonEssentialConsent === "true") {
             nonEssentialCookiesAccepted.set(true);
+        } else {
+            nonEssentialCookiesAccepted.set(false);
         }
     });
 
     function acceptCookies() {
-        console.log("Accepting cookies");
         localStorage.setItem("cookieConsent", "true");
         localStorage.setItem("nonEssentialCookieConsent", "true");
         consentGiven.set(true);
         nonEssentialCookiesAccepted.set(true);
     }
 
-    function rejectNonEssentialCookies() {
-        console.log("Rejecting non-essential cookies");
-        localStorage.setItem("nonEssentialCookieConsent", "false");
-        nonEssentialCookiesAccepted.set(false);
-    }
+function rejectNonEssentialCookies() {
+    localStorage.setItem("cookieConsent", "true");
+    localStorage.setItem("nonEssentialCookieConsent", "false");
+    consentGiven.set(true);
+    nonEssentialCookiesAccepted.set(false);
+}
 </script>
 
 <style lang="scss">

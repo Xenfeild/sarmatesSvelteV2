@@ -1,6 +1,7 @@
 <script>
     import { onMount } from "svelte";
     import { translations, loadTranslations } from '../stores/translationStore';
+    import { nonEssentialCookiesAccepted } from '../stores/cookies.js';
 
     onMount(() => {
         const userLang = navigator.language || navigator.language;
@@ -14,7 +15,14 @@
     <div class="content">
         <div class="container">
             <h3>Sarmates</h3>
-            <iframe style="border-radius:12px" src="https://open.spotify.com/embed/artist/0W6mPvqyV2o6BxJsLh2u1N?utm_source=generator&theme=0" width="100%" height="352" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+            {#if $nonEssentialCookiesAccepted}
+                <iframe style="border-radius:12px" src="https://open.spotify.com/embed/artist/0W6mPvqyV2o6BxJsLh2u1N?utm_source=generator&theme=0" width="100%" height="352" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+            {:else}
+                <div style="text-align:center; padding:2rem;">
+                    <p>Pour écouter la discographie Spotify, veuillez accepter les cookies non essentiels.</p>
+                    <a href="https://open.spotify.com/artist/0W6mPvqyV2o6BxJsLh2u1N" target="_blank" rel="noopener noreferrer">Accéder à Sarmates sur Spotify</a>
+                </div>
+            {/if}
         </div>
     </div>
 </section> 

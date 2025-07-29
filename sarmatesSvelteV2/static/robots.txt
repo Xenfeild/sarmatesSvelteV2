@@ -1,0 +1,7 @@
+User-agent: *
+Disallow: /admin/
+
+# Autoriser tout le reste
+Allow: /
+
+Sitemap: https://www.sarmates-music.com/sitemap.xml

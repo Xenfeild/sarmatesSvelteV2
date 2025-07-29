@@ -55,6 +55,16 @@ main {
 //     }
 // }
 
+a {
+    color: $secondary-color;
+    text-decoration: none;
+    font-family: $title-font;
+    font-weight: 500;
+    font-size: $font-size2;
+    &:hover {
+        color: $third-color;
+    }
+}
 
 h2 {
     font-family: $title-font;

@@ -1,6 +1,6 @@
 <script lang="ts">
     import { onMount } from 'svelte';
-	import AdminHeader from '../../components/adminHeader.svelte';
+    import AdminHeader from '../../components/adminHeader.svelte';
     import Cards from '../../components/Cards.svelte';
     import CardsPress from '../../components/CardsPress.svelte';
     import Modal from '../../components/Modal.svelte';
@@ -132,15 +132,34 @@
     </section>
     <!-- modal component -->
     {#if isModalOpen && selectedItem}
-    <Modal
-        title={selectedItem.title || selectedItem.event_name}
-        image={`http://localhost:3000${selectedItem.image}`}
-        content={selectedItem.content || selectedItem.address}
-        date={selectedItem.date || selectedItem.event_date}
-        link={selectedItem.link}
-        onClose={closeModal}
-    />
-{/if}
+        {#if 'event_name' in selectedItem}
+            <Modal
+                title={selectedItem.event_name}
+                image={`http://localhost:3000${selectedItem.image}`}
+                content={selectedItem.address}
+                date={selectedItem.event_date}
+                link={selectedItem.link}
+                onClose={closeModal}
+            />
+        {:else if 'link' in selectedItem}
+            <Modal
+                title={selectedItem.title}
+                image={`http://localhost:3000${selectedItem.image}`}
+                content={selectedItem.content}
+                date={selectedItem.date}
+                link={selectedItem.link}
+                onClose={closeModal}
+            />
+        {:else}
+            <Modal
+                title={selectedItem.title}
+                image={`http://localhost:3000${selectedItem.image}`}
+                content={selectedItem.content}
+                date={selectedItem.date}
+                onClose={closeModal}
+            />
+        {/if}
+    {/if}
     
 </main>
 

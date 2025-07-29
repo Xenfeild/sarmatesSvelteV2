@@ -1,6 +1,7 @@
 <script>
     import { onMount } from "svelte";
     import { translations, loadTranslations } from '../stores/translationStore';
+    import { nonEssentialCookiesAccepted } from '../stores/cookies.js';
     import Carousel from "./Carousel.svelte";
 
     onMount(() => {
@@ -17,13 +18,20 @@
         <div id="clip">
             <div class="video">
                 <h4>Kötüyüm</h4>
-                <iframe src="https://www.youtube.com/embed/PmH27yiXOk0?si=XMyQlidhVp1RSsFz" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                {#if $nonEssentialCookiesAccepted}
+                    <iframe src="https://www.youtube.com/embed/PmH27yiXOk0?si=XMyQlidhVp1RSsFz" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                {:else}
+                    <iframe src="https://www.youtube-nocookie.com/embed/PmH27yiXOk0?si=XMyQlidhVp1RSsFz" title="YouTube video player (mode sans cookie)" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                {/if}
             </div>
             <div class="video">
                 <h4>Legion</h4>
-                <iframe src="https://www.youtube.com/embed/VF_lY4yQNVU?si=WiRwkt7kxkqElJN_" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                {#if $nonEssentialCookiesAccepted}
+                    <iframe src="https://www.youtube.com/embed/VF_lY4yQNVU?si=WiRwkt7kxkqElJN_" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                {:else}
+                    <iframe src="https://www.youtube-nocookie.com/embed/VF_lY4yQNVU?si=WiRwkt7kxkqElJN_" title="YouTube video player (mode sans cookie)" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                {/if}
             </div>
-
         </div>
         <h3>{$translations.photos}</h3>
         <div id="photo">
