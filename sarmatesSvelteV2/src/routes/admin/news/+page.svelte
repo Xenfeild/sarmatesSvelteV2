@@ -1,6 +1,6 @@
 <script lang="ts">
     import { onMount } from 'svelte';
-	import AdminHeader from '../../../components/adminHeader.svelte';
+    import AdminHeader from '../../../components/adminHeader.svelte';
 
     interface NewsItem {
         id: number;
@@ -57,7 +57,7 @@
             });
 
             if (response.ok) {
-                console.log('News added successfully');
+                // ...log supprimé pour préprod...
                 await fetchNews();
                 newTitle = '';
                 newImage = null;
@@ -74,13 +74,13 @@
 
     async function deleteNews(id: number): Promise<void> {
         try {
-            console.log(`Sending DELETE request for news ID: ${id}`);
+            // ...log supprimé pour préprod...
             const response = await fetch(`http://localhost:3000/api/news/${id}`, {
                 method: 'DELETE'
             });
 
             if (response.ok) {
-                console.log('News deleted successfully');
+                // ...log supprimé pour préprod...
                 await fetchNews();
             } else {
                 const errorText = await response.text();

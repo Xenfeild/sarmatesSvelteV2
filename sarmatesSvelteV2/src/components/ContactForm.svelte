@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
     import { createEventDispatcher } from "svelte";
     const dispatch = createEventDispatcher();
 
@@ -11,15 +11,41 @@
     let company = '';
     let message = '';
 
-    function handleFormSubmit () {
-        const formData = {
-            firstName,
-            lastName,
-            email,
-            company,
-            message
-        };
-        dispatch('submit', formData);
+    let sending = false;
+    let success: boolean | null = null;
+    let errorMsg = '';
+
+    async function handleFormSubmit () {
+        sending = true;
+        success = null;
+        errorMsg = '';
+        // Construction du formData attendu par le PHP
+        const formData = new FormData();
+        formData.append('name', firstName);
+        formData.append('surename', lastName);
+        formData.append('email', email);
+        formData.append('company', company);
+        formData.append('message', message);
+        try {
+            const response = await fetch('/routes/admin/contact.php', {
+                method: 'POST',
+                body: formData
+            });
+            const data = await response.json();
+            if (response.ok && data.status === 200) {
+                success = true;
+                firstName = lastName = email = company = message = '';
+            } else {
+                success = false;
+                errorMsg = data.message || "Erreur lors de l'envoi. Merci de réessayer.";
+            }
+        } catch (e) {
+            success = false;
+            errorMsg = 'Erreur réseau ou serveur.';
+        } finally {
+            sending = false;
+        }
+        dispatch('submit', Object.fromEntries(formData));
     }
 </script>
 
@@ -38,7 +64,12 @@
             <input type="text" id="company" bind:value={company}>
             <label for="message">Message</label>
             <textarea id="message" bind:value={message} required></textarea>
-            <button type="submit">Submit</button>
+            <button type="submit" disabled={sending}>{sending ? 'Envoi...' : 'Submit'}</button>
+            {#if success === true}
+                <p style="color:green;">Message envoyé !</p>
+            {:else if success === false}
+                <p style="color:red;">{errorMsg}</p>
+            {/if}
     </div>
 {/if}
 
