@@ -1,28 +1,15 @@
 <script lang="ts">
     import { onMount } from "svelte";
     import { translations, loadTranslations } from '../stores/translationStore';
+    import { api } from '$lib/services/api';
+    import type { PressItem } from '$lib/types';
     import Card from "./CardsPress.svelte";
-
-
-    interface PressItem {
-        id: number;
-        title: string;
-        image: string;
-        content: string;
-        date: string;
-        link: string;
-    }
 
     let press: PressItem[] = [];
 
     async function fetchPress(): Promise<void> {
         try {
-            const response = await fetch('http://localhost:3000/api/press');
-            if (response.ok) {
-                press = await response.json();
-            } else {
-                console.error('Failed to fetch press:', response.statusText);
-            }
+            press = await api.getPress();
         } catch (error) {
             console.error('Error fetching press:', error);
         }

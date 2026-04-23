@@ -51,7 +51,7 @@
       <a target="_blank" href="https://www.youtube.com/@SarmatesMusic"><i class="fa-brands fa-youtube"></i></a>
       <a target="_blank" href="https://sarmates.bandcamp.com/album/sarmates"><i class="fa-brands fa-bandcamp"></i></a>
       <a target="_blank" href="https://soundcloud.com/we-are-sarmates"><i class="fa-brands fa-soundcloud"></i></a>
-      <a href="javascript:void(0);" on:click={openModal}><i class="fa-sharp fa-solid fa-envelope"></i></a>
+      <a href="#contact" on:click|preventDefault={openModal}><i class="fa-sharp fa-solid fa-envelope"></i></a>
   </div>
 
   <!-- newsletter div -->

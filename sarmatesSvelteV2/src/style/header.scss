@@ -104,6 +104,12 @@ header {
                 cursor: pointer;
             }
         }
+
+        .flag-btn {
+            background: transparent;
+            padding: 0;
+            display: block;
+        }
     
         &:hover .dropdown-content {
             display: block;

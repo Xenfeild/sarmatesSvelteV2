@@ -16,7 +16,7 @@
         <div class="container">
             <h3>Sarmates</h3>
             {#if $nonEssentialCookiesAccepted}
-                <iframe style="border-radius:12px" src="https://open.spotify.com/embed/artist/0W6mPvqyV2o6BxJsLh2u1N?utm_source=generator&theme=0" width="100%" height="352" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+                <iframe title="Sarmates sur Spotify" style="border-radius:12px" src="https://open.spotify.com/embed/artist/0W6mPvqyV2o6BxJsLh2u1N?utm_source=generator&theme=0" width="100%" height="352" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
             {:else}
                 <div style="text-align:center; padding:2rem;">
                     <p>Pour écouter la discographie Spotify, veuillez accepter les cookies non essentiels.</p>

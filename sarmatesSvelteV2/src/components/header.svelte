@@ -6,7 +6,7 @@
     // import { createEventDispatcher } from "svelte";
     import { translations, loadTranslations } from "../stores/translationStore";
     import { onMount } from 'svelte';
-    import { get } from 'svelte/store';
+
   
     // navbar fonctions
     let isNavVisible = false;
@@ -40,10 +40,7 @@
   </script>
   
   <style lang="scss">
-    // @import "../style/style.scss";
     @import "../style/header.scss";
-    // @import "../style/burgerSVG.scss";
-  
   </style>
   
   <header>
@@ -78,9 +75,15 @@
         <div class="language-selector">
           <img src={selectedFlag} alt="Selected Language" class="selected">
           <div class="dropdown-content">
-            <img src={frenchFlag} alt="Français" class="flag" on:click={() => handleLanguageChange('fr')}>
-            <img src={englishFlag} alt="English" class="flag" on:click={() => handleLanguageChange('en')}>
-            <img src={spanishFlag} alt="Español" class="flag" on:click={() => handleLanguageChange('es')}>
+            <button class="flag-btn" on:click={() => handleLanguageChange('fr')}>
+              <img src={frenchFlag} alt="Français" class="flag">
+            </button>
+            <button class="flag-btn" on:click={() => handleLanguageChange('en')}>
+              <img src={englishFlag} alt="English" class="flag">
+            </button>
+            <button class="flag-btn" on:click={() => handleLanguageChange('es')}>
+              <img src={spanishFlag} alt="Español" class="flag">
+            </button>
           </div>
         </div>
       </ul>

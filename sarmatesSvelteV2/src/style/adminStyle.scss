@@ -14,6 +14,10 @@ $third-color: #ff9634;
 main {
     align-items: column;
     background-color: #000a1c;
+    padding: 2rem;
+}
+header{
+    background-attachment: fixed;
 }
 h1 {
     display: flex;
@@ -39,11 +43,6 @@ h3 {
     text-align: center;
 }
 
-h4 {
-    font-size: 1.5rem;
-    font-weight: 400;
-}
-
 p {
     margin-bottom: 1rem;
     font-family: "Lexend Exa", sans-serif;
@@ -51,16 +50,6 @@ p {
     text-shadow: 4px 4px 3px #000000;
 }
 
-a {
-    font-family: "lexend exa", sans-serif;
-    text-shadow: 3px 3px 2px #000000;
-}
-// input, textarea {
-//     display: block;
-//     margin-bottom: 1rem;
-//     width: 90%;
-//     color: #fff;
-// }
 button  {
     font-size: $font-size;
     border: none;
@@ -68,23 +57,14 @@ button  {
     padding: 1vh;
     background-color: $third-color;
     color: $primary-color;
+    cursor: pointer;
     &:hover {
         background-color: darken($third-color, 10%);
         color: lighten($secondary-color, 10%);
     }
 }
+
 img {
-    max-width: 700px;
-    display: block;
-}
-
-section {
-    margin-top: 1rem;
-    border-top: 3px solid #9a9999;
-    padding: 2rem;
-}
-
-.preview img {
     max-width: 700px;
     display: block;
 }
@@ -112,6 +92,7 @@ section {
         background-color: #ffffff;
         color: #000000;
     }
+    
     .adminBtn{
         display: flex;
         justify-content: center;
@@ -122,72 +103,87 @@ section {
     }
 }
 
-// live exception
-
-.liveList {
-    background-color: #333;
-    width: 85%;
-    border-radius: 10px;
+// Séparations visuelles entre les sections admin
+section {
+    margin: 1rem 0;
     padding: 1rem;
-    margin: 1rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    width: 90%;
-    text-align: center;
-    img {
-        margin: 1rem 0;
-        width: 100%;
-        aspect-ratio: 1/1;
-        object-fit: contain;
+    border-top: 3px solid #9a9999;
+    background-color: rgba(51, 51, 51, 0.3);
+    border-radius: 8px;
+    width: 100%;
+    box-sizing: border-box;
+    
+    &:first-of-type {
+        border-top: none;
+        margin-top: 1rem;
     }
-    #liveInfoTop{
-        width: 100%;
-    }
-    #liveInfoMiddle {
-        h3 {
-            font-family: "Lexend Exa", sans-serif;
-        }
-    }
-    #liveInfoBottom {
-        display: flex;
-        flex-direction: column;
-        button {
-            margin-bottom: 1rem;
-            cursor: pointer;
-        }
+    
+    h2 {
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid $third-color;
     }
 }
 
-// .adminContainer{
-//     display: flex;
-//     justify-content: center;
-//     align-items: center;
-//     width: 90%;
-// }
-
-
-@media (min-width: 785px) {
-    .liveList {
-        flex-direction: row;
+// Styles pour les listes admin (dashboard) - RESPONSIVE
+.adminList {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+    width: 100%;
+    
+    li {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
         align-items: center;
-        justify-content: space-between;
-        #liveInfoTop {
-            width: 30%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            img {
-                max-height: 200px;
-                max-width: 200px;
-            }
+        margin: 0.5rem;
+        width: 100%;
+        max-width: 300px;
+        min-width: 250px;
+        text-align: center;
+        border: 2px solid transparent;
+        
+        h3 {
+            margin: 1rem;
+            text-shadow: 4px 4px 3px #000000;
         }
-        #liveInfoMiddle {
-            width: 30%;
-            text-align: center;
+        
+        img {
+            width: 100%;
+            max-width: 290px;
+            height: auto;
+            object-fit: cover;
         }
-        #liveInfoBottom {
-            width: 30%;
+    }
+    
+    .modalImg {
+        width: 100%;
+        max-width: 290px;
+        height: auto;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+        margin: 1rem;
+    }
+}
+
+// Media queries pour responsive
+@media (max-width: 768px) {
+    .adminList {
+        justify-content: center;
+        
+        li {
+            width: 90%;
+            max-width: none;
+            min-width: auto;
         }
+    }
+    
+    section {
+        margin: 0.5rem;
+        padding: 0.8rem;
     }
 }

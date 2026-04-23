@@ -13,7 +13,9 @@
     }
 </script>
 
-<div class="modal" role="dialog" aria-modal="true" on:keydown={handleKeydown}>
+<svelte:window on:keydown={handleKeydown} />
+
+<div class="modal" role="dialog" aria-modal="true">
     <div class="modal-content">
         <button class="close" on:click={onClose} aria-label="Close modal">&times;</button>
         <h2>{title}</h2>

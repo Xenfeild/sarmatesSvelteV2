@@ -3,15 +3,9 @@
     import Header from "../../components/header.svelte";
     import { onMount } from "svelte";
     import { translations, loadTranslations } from "../../stores/translationStore";
-
-    interface LiveItem {
-        id: number;
-        event_name: string;
-        image: string;
-        address: string;
-        event_date: string;
-        link: string;
-    }
+    import { api } from '$lib/services/api';
+    import { getUploadUrl } from '$lib/config';
+    import type { LiveItem } from '$lib/types';
 
     let liveItems: LiveItem[] = [];
 
@@ -21,12 +15,7 @@
         loadTranslations(lang);
 
         try {
-            const response = await fetch('http://localhost:3000/api/live');
-            if (response.ok) {
-                liveItems = await response.json();
-            } else {
-                console.error('Failed to fetch live events:', response.statusText);
-            }
+            liveItems = await api.getLive();
         } catch (error) {
             console.error('Error fetching live events:', error);
         }
@@ -47,7 +36,7 @@
                 {#each liveItems as item}
                     <div class="liveItem">
                         <div class="top">
-                            <img src={item.image} alt={item.event_name} />
+                            <img src={getUploadUrl(item.image)} alt={item.event_name} />
                         </div>
                         <div class="middle">
                             <h2>{item.event_name}</h2>

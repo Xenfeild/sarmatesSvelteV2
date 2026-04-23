@@ -1,17 +1,13 @@
 <script>
-    import { createEventDispatcher } from "svelte";
-    const dispatch = createEventDispatcher();
-
     export let show = false;
     export let close;
-
 </script>
 
 {#if show}
-    <div class="modal-backdrop" on:click={close}></div>
+    <div class="modal-backdrop" role="button" tabindex="-1" aria-label="Fermer" on:click={close} on:keydown={(e) => e.key === 'Escape' && close()}></div>
     <div class="modal">
         <button class="close" on:click={close}>X</button>
-        <iframe width="540" height="750" src="https://7acde5b9.sibforms.com/serve/MUIFAH-gEOkgkmiRBMZOq1mGKs4N-PNsigOPpsLKIATLom0zFP1FmlgMWJE-Re2U9HEJTFNu9IhL16ZW-n3TzvB6ydCE2IUcw4McmsF5qDEjMcIFq2Msy--3C0p462YlwOEc1khP_MvKzMFB1Qq2U__8HRCRJPsKJI2QQlFW14RY-W-CeXA0cNB21TT5WCHGCJOYzRDBsRaF4bZh" frameborder="0" scrolling="auto" allowfullscreen style="display: block;margin-left: auto;margin-right: auto;max-width: 100%;"></iframe>
+        <iframe title="Newsletter Sarmates" width="540" height="750" src="https://7acde5b9.sibforms.com/serve/MUIFAH-gEOkgkmiRBMZOq1mGKs4N-PNsigOPpsLKIATLom0zFP1FmlgMWJE-Re2U9HEJTFNu9IhL16ZW-n3TzvB6ydCE2IUcw4McmsF5qDEjMcIFq2Msy--3C0p462YlwOEc1khP_MvKzMFB1Qq2U__8HRCRJPsKJI2QQlFW14RY-W-CeXA0cNB21TT5WCHGCJOYzRDBsRaF4bZh" frameborder="0" scrolling="auto" allowfullscreen style="display: block;margin-left: auto;margin-right: auto;max-width: 100%;"></iframe>
     </div>
 {/if}
 

@@ -22,18 +22,25 @@
             ]
         },
         { 
+            type: 'image', 
+            src: 'leoff1.webp', 
+            alt: 'Hellfest off affiche', 
+            text: 'caption2', 
+            cta: { url: '#galleries', text: 'watchVideo' }
+        },
+        { 
             type: 'video', 
-            src: 'introSarmates.mp4', 
+            src: '/introSarmates.mp4', 
             alt: 'Video 1', 
             text: 'caption2', 
-            cta: { url: '#', text: 'watchVideo' }
+            cta: { url: '#galleries', text: 'watchVideo' }
         },
         { 
             type: 'image', 
-            src: 'Sarmates_shoot-29.webp', 
+            src: '/Sarmates_shoot-29.webp', 
             alt: 'Image 1', 
             text: 'caption3', 
-            cta: { url: '#', text: 'goToGaleries' }
+            cta: { url: '#galleries', text: 'goToGaleries' }
         },
     ];
 
@@ -51,14 +58,6 @@
         // };
     });
 
-
-    function debounce(func: (...args: any[]) => void, wait: number) {
-        let timeout: number | undefined;
-        return (...args: any[]) => {
-            clearTimeout(timeout);
-            timeout = window.setTimeout(() => func(...args), wait);
-        };
-    }
 
     function adjustPaths() {
     const basePath = window.innerWidth < 785 ? '../src/lib/img/m/' : '../src/lib/img/';

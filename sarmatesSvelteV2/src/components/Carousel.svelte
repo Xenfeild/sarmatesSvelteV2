@@ -99,6 +99,8 @@
     .modal img {
         max-width: 90%;
         max-height: 90%;
+        position: relative;
+        z-index: 1;
     }
 
     .modal-close {
@@ -110,12 +112,35 @@
         color: white;
         font-size: 2rem;
         cursor: pointer;
+        z-index: 2;
+    }
+
+    .modal-backdrop {
+        position: absolute;
+        inset: 0;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+    }
+
+    .carousel-img-btn {
+        background: none;
+        border: none;
+        padding: 0;
+        width: 100%;
+        display: block;
+        cursor: pointer;
     }
   </style>
   
   <div class="carousel">
     {#if images.length > 0}
-        <img src={images[currentIndex]} alt="Photo ${currentIndex + 1}" on:click={() => openModal(images[currentIndex])}>
+        <button class="carousel-img-btn" on:click={() => openModal(images[currentIndex])} aria-label="Agrandir la photo {currentIndex + 1} de la galerie">
+            <img src={images[currentIndex]} alt="Galerie Sarmates {currentIndex + 1}">
+        </button>
         <div class="carousel-buttons">
             <button class="carousel-button" on:click={prev}>❮</button>
             <button class="carousel-button" on:click={next}>❯</button>
@@ -123,8 +148,9 @@
     {/if}
 </div>
   {#if showModal}
-    <div class="modal" on:click={closeModal}>
-        <button class="modal-close" on:click={closeModal}>&times;</button>
-        <img src={modalImage} alt="Modal Image">
+    <div class="modal" role="dialog" aria-modal="true">
+        <button class="modal-backdrop" on:click={closeModal} aria-label="Fermer la galerie"></button>
+        <button class="modal-close" on:click={closeModal} aria-label="Fermer">&times;</button>
+        <img src={modalImage} alt="Vue agrandie - galerie Sarmates">
     </div>
 {/if}

@@ -3,13 +3,7 @@
     import { translations, loadTranslations } from '../stores/translationStore';
     import BiographyCard from "./BiographyCard.svelte";
     import BiographyModal from "./BiographyModal.svelte";
-
-    interface BiographyItem {
-        name: string;
-        image: string;
-        role: string;
-        content: string;
-    }
+    import type { BiographyItem } from '$lib/types';
 
     let selectedBiography: BiographyItem | null = null;
 
@@ -20,17 +14,30 @@
     function closeModal() {
         selectedBiography = null;
     }
-    let isExpanded = false;
-
-    function toggleExpand() {
-        isExpanded = !isExpanded;
-    }
 
     onMount(() => {
         const userLang = navigator.language || navigator.language;
         const lang = userLang.split('-')[0]; // 'fr', 'en', 'es'
         loadTranslations(lang);
     });
+
+    // Contenu biographie complète pour la modale
+    $: fullBiographyContent = {
+        name: "Sarmates",
+        image: "src/lib/img/fire.webp",
+        role: $translations.biography,
+        content: `${$translations.biography1}
+
+${$translations.biography2}
+
+${$translations.biography3}`,
+        // Images supplémentaires pour la modale
+        additionalImages: [
+            "src/lib/img/concert-85.webp",
+            "src/lib/img/concert-14.webp"
+        ]
+    };
+
     $: biographyItems = [
         {
             name: "Laurent Broda",
@@ -68,29 +75,15 @@
 
 <section id="biography">
     <h2>{$translations.biography}</h2>
-    <div class="content {isExpanded ? 'expanded' : ''}">
-        <div class="container {isExpanded ? 'expanded' : ''}">
-            <!-- biography Content -->
+    <div class="content">
+        <div class="container">
+            <!-- biography Content - Introduction toujours visible -->
             <div class="paragraph">
                 <p>{$translations.biography1}</p>
-                <img src="src/lib/img/fire.webp" alt="Fire Image">
+                <img src="src/lib/img/fire.webp" alt="Fire">
             </div>
-            {#if isExpanded}
-                <div class="paragraph">
-                    <img src="src/lib/img/concert-85.webp" alt="Concert Image">
-                    <p>{$translations.biography2}</p>
-                </div>
-                <div class="paragraph">
-                    <p>{$translations.biography3}</p>
-                    <img src="src/lib/img/concert-14.webp" alt="Concert Image">
-                </div>
-            {/if}
-            <button on:click={toggleExpand} title="toggle biography button">
-                {#if isExpanded}
-                    Réduire la biographie
-                {:else}
-                    Voir la biographie complète
-                {/if}
+            <button on:click={() => selectBiography(fullBiographyContent)} title="voir biographie complète">
+                Voir la biographie complète
             </button>
         </div>
     </div>
@@ -154,22 +147,6 @@
 
             @media (min-width: 785px) {
                 flex-direction: row; /* En ligne pour les écrans plus larges */
-            }
-        }
-
-        button {
-            font-size: 1.5rem;
-            padding: 0.5rem 1rem;
-            border: none;
-            border-radius: 5px;
-            background-color: $third-color;
-            color: $primary-color;
-            cursor: pointer;
-            transition: background-color 0.3s;
-
-            &:hover {
-                background-color: darken($third-color, 10%);
-                color: $secondary-color;
             }
         }
 

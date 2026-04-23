@@ -1,29 +1,39 @@
 <script lang="ts">
     import { goto } from '$app/navigation';
+    import { getApiUrl } from '$lib/config';
     let username = '';
     let password = '';
     let errorMessage = '';
 
     async function login() {
         try {
-            const response = await fetch('http://localhost:3000/api/login', {
+            const response = await fetch(getApiUrl('/api/login'), {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
+                credentials: 'include',
                 body: JSON.stringify({ username, password })
             });
 
             if (response.ok) {
-                const data = await response.json();
-                document.cookie = `token=${data.token}; Path=/; HttpOnly`;
                 goto('/admin');
+            } else if (response.status === 429) {
+                const data = await response.json();
+                errorMessage = data.error || 'Trop de tentatives de connexion. Réessayez dans 15 minutes.';
             } else {
-                errorMessage = 'Invalid username or password';
+                const remaining = response.headers.get('RateLimit-Remaining');
+                const attemptsLeft = remaining !== null ? parseInt(remaining) : null;
+                if (attemptsLeft !== null && attemptsLeft <= 7) {
+                    const plural = attemptsLeft > 1 ? 's' : '';
+                    errorMessage = `Identifiant ou mot de passe incorrect. ${attemptsLeft} tentative${plural} restante${plural}.`;
+                } else {
+                    errorMessage = 'Identifiant ou mot de passe incorrect.';
+                }
             }
         } catch (error) {
             console.error('Error logging in:', error);
-            errorMessage = 'An error occurred. Please try again.';
+            errorMessage = 'Une erreur est survenue. Veuillez réessayer.';
         }
     }
 </script>

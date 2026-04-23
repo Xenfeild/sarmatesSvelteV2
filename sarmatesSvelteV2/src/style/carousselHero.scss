@@ -75,18 +75,17 @@
     display: inline-block;
     margin-top: 10px;
     padding: 10px 20px;
-    background-color: $third-color;
-    color: $secondary-color;
-    text-decoration: none;
-    border-radius: 5px;
-    font-family: $title-font;
     font-size: $font-size;
-    color: $primary-color;
-    z-index: 3;
-
+    border: solid 1px;
+    border-radius: 5px;
+    border-color: $third-color;
+    padding: 1vh;
+    background-color: $primary-color;
+    color: $third-color;
     &:hover {
         background-color: darken($third-color, 10%);
-        color: lighten($secondary-color, 10%);
+        color: $primary-color;
+        border-color: $primary-color;
     }
 }
 

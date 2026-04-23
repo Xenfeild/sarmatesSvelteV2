@@ -1,15 +1,9 @@
 <script lang="ts">
     import { onMount } from 'svelte';
 	import AdminHeader from '../../../components/adminHeader.svelte';
-
-    interface LiveItem {
-        id: number;
-        event_name: string;
-        image: string;
-        address: string;
-        event_date: string;
-        link: string;
-    }
+    import { getUploadUrl } from '$lib/config';
+    import { api } from '$lib/services/api';
+    import type { LiveItem } from '$lib/types';
 
     let live: LiveItem[] = [];
     let newEventName: string = '';
@@ -24,25 +18,31 @@
     let editLink: string = '';
     let editImage: string = '';
     let previewImage: string | null = null;
+    let imageError: string = '';
 
     async function fetchLive(): Promise<void> {
         try {
-            const response = await fetch('http://localhost:3000/api/live');
-            if (response.ok) {
-                const data = await response.json();
-                live = data;
-            } else {
-                console.error('Failed to fetch live events:', response.statusText);
-            }
+            live = await api.getLive();
         } catch (error) {
             console.error('Error fetching live events:', error);
         }
     }
 
+    const allowedImageTypes = ['image/jpeg', 'image/png', 'image/webp'];
+
     function selectImage(event: Event): void {
         const target = event.target as HTMLInputElement;
         if (target.files && target.files.length > 0) {
-            newImage = target.files[0];
+            const file = target.files[0];
+            if (!allowedImageTypes.includes(file.type)) {
+                imageError = 'Format non autorisé. Seules les images JPEG, PNG et WebP sont acceptées.';
+                newImage = null;
+                previewImage = null;
+                target.value = '';
+                return;
+            }
+            imageError = '';
+            newImage = file;
             previewImage = URL.createObjectURL(newImage);
         }
     }
@@ -58,43 +58,28 @@
         }
 
         try {
-            const response = await fetch('http://localhost:3000/api/live', {
-                method: 'POST',
-                body: formData
-            });
-
-            if (response.ok) {
-                console.log('Live event added successfully');
-                await fetchLive();
-                newEventName = '';
-                newAddress = '';
-                newEventDate = '';
-                newLink = '';
-                newImage = null;
-                previewImage = null;
-            } else {
-                const errorText = await response.text();
-                console.error('Failed to add live event:', response.status, response.statusText, errorText);
-            }
+            await api.createLive(formData);
+            console.log('Live event added successfully');
+            await fetchLive();
+            newEventName = '';
+            newAddress = '';
+            newEventDate = '';
+            newLink = '';
+            newImage = null;
+            previewImage = null;
+            imageError = '';
         } catch (error) {
             console.error('Error adding live event:', error);
+            imageError = error instanceof Error ? error.message : "Erreur lors de l'ajout de l'événement.";
         }
     }
 
     async function deleteLive(id: number): Promise<void> {
         try {
             console.log(`Sending DELETE request for live event ID: ${id}`);
-            const response = await fetch(`http://localhost:3000/api/live/${id}`, {
-                method: 'DELETE'
-            });
-
-            if (response.ok) {
-                console.log('Live event deleted successfully');
-                await fetchLive();
-            } else {
-                const errorText = await response.text();
-                console.error('Failed to delete live event:', response.status, response.statusText, errorText);
-            }
+            await api.deleteLive(id);
+            console.log('Live event deleted successfully');
+            await fetchLive();
         } catch (error) {
             console.error('Error deleting live event:', error);
         }
@@ -107,7 +92,7 @@
         editEventDate = item.event_date;
         editLink = item.link;
         editImage = item.image;
-        previewImage = `http://localhost:3000${item.image}`;
+        previewImage = getUploadUrl(item.image);
 
         setTimeout(() => {
             const editSection = document.getElementById('edit-section');
@@ -133,25 +118,19 @@
         }
 
         try {
-            const response = await fetch(`http://localhost:3000/api/live/${editLiveId}`, {
-                method: 'PUT',
-                body: formData
-            });
-
-            if (response.ok) {
-                await fetchLive();
-                editLiveId = null;
-                editEventName = '';
-                editAddress = '';
-                editEventDate = '';
-                editLink = '';
-                editImage = '';
-                previewImage = null;
-            } else {
-                console.error('Failed to update live event:', response.statusText);
-            }
+            await api.updateLive(editLiveId, formData);
+            await fetchLive();
+            editLiveId = null;
+            editEventName = '';
+            editAddress = '';
+            editEventDate = '';
+            editLink = '';
+            editImage = '';
+            previewImage = null;
+            imageError = '';
         } catch (error) {
             console.error('Error updating live event:', error);
+            imageError = error instanceof Error ? error.message : 'Erreur lors de la mise à jour.';
         }
     }
 
@@ -169,6 +148,7 @@
         <input type="date" bind:value={newEventDate} placeholder="Event Date" />
         <input type="text" bind:value={newLink} placeholder="Link" />
         <input type="file" accept="image/*" on:change={selectImage} />
+        {#if imageError}<p class="error">{imageError}</p>{/if}
         <button on:click={addLive}>Add</button>
     </div>
 
@@ -180,6 +160,7 @@
             <input type="date" bind:value={editEventDate} placeholder="Event Date" />
             <input type="text" bind:value={editLink} placeholder="Link" />
             <input type="file" accept="image/*" on:change={selectImage} />
+            {#if imageError}<p class="error">{imageError}</p>{/if}
             <button on:click={updateLive}>Update</button>
             <button on:click={() => { editLiveId = null; previewImage = null; }}>Cancel</button>
         </div>
@@ -188,7 +169,7 @@
             {#if previewImage}
                 <img src={previewImage} alt="Preview" />
             {:else}
-                <img src={`http://localhost:3000${editImage}`} alt="Preview" />
+                <img src={getUploadUrl(editImage)} alt="Preview" />
             {/if}
             <p>{editAddress}</p>
             <p>{editEventDate}</p>
@@ -202,7 +183,7 @@
             {#each live as item}
                 <li class="liveList">
                     <div id="liveInfoTop">
-                        <img src={`http://localhost:3000${item.image}`} alt={item.address} />
+                        <img src={getUploadUrl(item.image)} alt={item.address} />
                     </div>
                     <div id="liveInfoMiddle">
                         <h3>{item.event_name}</h3>
@@ -225,4 +206,78 @@
 
 <style lang="scss">
     @import "../../../style/adminStyle.scss";
+
+    .error {
+        color: #ff4444;
+        font-size: 0.85rem;
+        margin-top: 0.25rem;
+    }
+    
+    // Styles spécifiques à la page LIVE
+    .liveList {
+        background-color: #333;
+        width: 85%;
+        border-radius: 10px;
+        padding: 1rem;
+        margin: 1rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        width: 90%;
+        text-align: center;
+        
+        img {
+            margin: 1rem 0;
+            width: 100%;
+            aspect-ratio: 1/1;
+            object-fit: contain;
+        }
+        
+        #liveInfoTop{
+            width: 100%;
+        }
+        
+        #liveInfoMiddle {
+            h3 {
+                font-family: "Lexend Exa", sans-serif;
+            }
+        }
+        
+        #liveInfoBottom {
+            display: flex;
+            flex-direction: column;
+            button {
+                margin-bottom: 1rem;
+                cursor: pointer;
+            }
+        }
+    }
+
+    @media (min-width: 785px) {
+        .liveList {
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            
+            #liveInfoTop {
+                width: 30%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                img {
+                    max-height: 200px;
+                    max-width: 200px;
+                }
+            }
+            
+            #liveInfoMiddle {
+                width: 30%;
+                text-align: center;
+            }
+            
+            #liveInfoBottom {
+                width: 30%;
+            }
+        }
+    }
 </style>

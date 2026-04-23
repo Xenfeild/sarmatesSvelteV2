@@ -11,18 +11,20 @@
 </style>
 <!-- script for dynamic switch languages -->
 <script>
-	const userLang = navigator.language || navigator.userLanguage;
-	const lang = userLang.split('-')[0]; 
-	document.getElementById('html-root').lang = lang;
+	document.addEventListener('DOMContentLoaded', function() {
+		const userLang = navigator.language || navigator.userLanguage;
+		const lang = userLang.split('-')[0]; 
+		document.getElementById('html-root').lang = lang;
 
-	//  Load translations
-	fetch(`locales/${lang}.json`)
-		.then(response => response.json())
-		.then(translations => {
-			document.title = translations.title;
-			document.querySelectorAll(`meta[name="description"]`).setAttribute('content', translations.description);
-		})
-		.catch(error => console.error('Error loading translation', error));
+		//  Load translations
+		fetch(`locales/${lang}.json`)
+			.then(response => response.json())
+			.then(translations => {
+				document.title = translations.title;
+				document.querySelector('meta[name="description"]').setAttribute('content', translations.description);
+			})
+			.catch(error => console.error('Error loading translation', error));
+	});
  </script>
 
 <!doctype html>

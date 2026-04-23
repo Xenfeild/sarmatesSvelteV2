@@ -11,7 +11,7 @@
     }
 </script>
 
-<div class="biography-card" tabindex="0" on:click={onClick} on:keydown={handleKeydown}>
+<div class="biography-card" role="button" tabindex="0" on:click={onClick} on:keydown={handleKeydown}>
     <h3>{name}</h3>
     <img src={image} alt={name} />
     <p class="role">{role}</p>

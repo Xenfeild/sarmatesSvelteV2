@@ -12,14 +12,33 @@
     }
 </script>
 
-<div class="biography-modal" role="dialog" aria-modal="true" on:keydown={handleKeydown}>
+<svelte:window on:keydown={handleKeydown} />
+
+<div class="biography-modal">
     <div class="modal-content">
         <button class="close" on:click={onClose} aria-label="Close modal">&times;</button>
         <h2>{name}</h2>
         <div class="modal-body">
-            <img src={image} alt={name} />
-            <p class="role">{role}</p>
-            <p>{content}</p>
+            {#if name === "Sarmates"}
+                <!-- Contenu spécial pour la biographie complète -->
+                <div class="paragraph">
+                    <p>{content.split('\n\n')[0]}</p>
+                    <img src="src/lib/img/fire.webp" alt="Feu sur scène lors d'un concert de Sarmates" />
+                </div>
+                <div class="paragraph">
+                    <img src="src/lib/img/concert-85.webp" alt="Concert Sarmates" />
+                    <p>{content.split('\n\n')[1]}</p>
+                </div>
+                <div class="paragraph">
+                    <p>{content.split('\n\n')[2]}</p>
+                    <img src="src/lib/img/concert-14.webp" alt="Scène Sarmates" />
+                </div>
+            {:else}
+                <!-- Contenu normal pour les membres -->
+                <img src={image} alt={name} />
+                <p class="role">{role}</p>
+                <p>{content}</p>
+            {/if}
         </div>
     </div>
 </div>
@@ -29,31 +48,30 @@
     .biography-modal {
         display: flex;
         justify-content: center;
-        align-items: center;
+        align-items: flex-start; /* Alignement en haut pour permettre le scroll */
         position: fixed;
         top: 0;
         left: 0;
         width: 100%;
-        height: 100%;
+        height: 100vh;
         background: rgba(0, 0, 0, 0.5);
         outline: none;
         z-index: 1000;
+        padding: 2rem 1rem; /* Padding pour éviter les bords */
+        overflow-y: auto; /* Scroll sur le container principal */
     }
 
     .modal-content {
         display: flex;
         flex-direction: column;
-        justify-content: center;
         align-items: center;
         text-align: center;
         background: $fourth-color;
         backdrop-filter: blur(5px);
         padding: 2rem;
         border-radius: 8px;
-        max-height: 85%;
-        width: 90%;
-        max-height: calc(100vh - 100px); /* Limite la hauteur maximale en dessous du header */
-        overflow-y: auto; /* Ajoute un défilement vertical */
+        width: 80%;
+        margin: 2rem auto; /* Centré avec marge */
         position: relative;
         h2 {
             margin-bottom: 1rem;
@@ -71,6 +89,37 @@
             font-size: clamp(12px, 1.5vw, 1.5rem);
             font-weight: 200;
             margin-bottom: 1rem;
+        }
+        
+        .paragraph {
+            margin-bottom: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            
+            img {
+                max-width: 90%; /* Même taille que Biography originale */
+                height: auto;
+                border-radius: 4px;
+                object-fit: contain;
+                margin-bottom: 1rem;
+            }
+            
+            @media (min-width: 785px) {
+                flex-direction: row;
+                align-items: flex-start;
+                
+                img {
+                    max-width: 50%; /* Même taille que Biography originale */
+                    padding: 1rem;
+                    margin: 0;
+                }
+                
+                p {
+                    flex: 1;
+                    text-align: left;
+                }
+            }
         }
     }
 

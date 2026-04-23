@@ -1,14 +1,9 @@
 <script lang="ts">
     import { onMount } from 'svelte';
     import AdminHeader from '../../../components/adminHeader.svelte';
-
-    interface NewsItem {
-        id: number;
-        title: string;
-        image: string;
-        content: string;
-        date: string;
-    }
+    import { getUploadUrl } from '$lib/config';
+    import { api } from '$lib/services/api';
+    import type { NewsItem } from '$lib/types';
 
     let news: NewsItem[] = [];
     let newTitle: string = '';
@@ -19,25 +14,31 @@
     let editImage: string = '';
     let editContent: string = '';
     let previewImage: string | null = null;
+    let imageError: string = '';
 
     async function fetchNews(): Promise<void> {
         try {
-            const response = await fetch('http://localhost:3000/api/news');
-            if (response.ok) {
-                const data = await response.json();
-                news = data;
-            } else {
-                console.error('Failed to fetch news:', response.statusText);
-            }
+            news = await api.getNews();
         } catch (error) {
             console.error('Error fetching news:', error);
         }
     }
 
+    const allowedImageTypes = ['image/jpeg', 'image/png', 'image/webp'];
+
     function selectImage(event: Event): void {
         const target = event.target as HTMLInputElement;
         if (target.files && target.files.length > 0) {
-            newImage = target.files[0];
+            const file = target.files[0];
+            if (!allowedImageTypes.includes(file.type)) {
+                imageError = 'Format non autorisé. Seules les images JPEG, PNG et WebP sont acceptées.';
+                newImage = null;
+                previewImage = null;
+                target.value = '';
+                return;
+            }
+            imageError = '';
+            newImage = file;
             previewImage = URL.createObjectURL(newImage);
         }
     }
@@ -51,41 +52,26 @@
         }
 
         try {
-            const response = await fetch('http://localhost:3000/api/news', {
-                method: 'POST',
-                body: formData
-            });
-
-            if (response.ok) {
-                // ...log supprimé pour préprod...
-                await fetchNews();
-                newTitle = '';
-                newImage = null;
-                newContent = '';
-                previewImage = null;
-            } else {
-                const errorText = await response.text();
-                console.error('Failed to add news:', response.status, response.statusText, errorText);
-            }
+            await api.post('/api/news', formData);
+            // ...log supprimé pour préprod...
+            await fetchNews();
+            newTitle = '';
+            newImage = null;
+            newContent = '';
+            previewImage = null;
+            imageError = '';
         } catch (error) {
             console.error('Error adding news:', error);
+            imageError = error instanceof Error ? error.message : "Erreur lors de l'ajout de l'actualité.";
         }
     }
 
     async function deleteNews(id: number): Promise<void> {
         try {
             // ...log supprimé pour préprod...
-            const response = await fetch(`http://localhost:3000/api/news/${id}`, {
-                method: 'DELETE'
-            });
-
-            if (response.ok) {
-                // ...log supprimé pour préprod...
-                await fetchNews();
-            } else {
-                const errorText = await response.text();
-                console.error('Failed to delete news:', response.status, response.statusText, errorText);
-            }
+            await api.delete('/api/news', id);
+            // ...log supprimé pour préprod...
+            await fetchNews();
         } catch (error) {
             console.error('Error deleting news:', error);
         }
@@ -96,7 +82,7 @@
         editTitle = item.title;
         editImage = item.image;
         editContent = item.content;
-        previewImage = `http://localhost:3000${item.image}`;
+        previewImage = getUploadUrl(item.image);
 
         // Faire défiler la page vers l'élément <h2>Editer Actualité</h2>
         setTimeout(() => {
@@ -120,23 +106,17 @@
         }
 
         try {
-            const response = await fetch(`http://localhost:3000/api/news/${editId}`, {
-                method: 'PUT',
-                body: formData
-            });
-
-            if (response.ok) {
-                await fetchNews();
-                editId = null;
-                editTitle = '';
-                editImage = '';
-                editContent = '';
-                previewImage = null;
-            } else {
-                console.error('Failed to update news:', response.statusText);
-            }
+            await api.put('/api/news', editId, formData);
+            await fetchNews();
+            editId = null;
+            editTitle = '';
+            editImage = '';
+            editContent = '';
+            previewImage = null;
+            imageError = '';
         } catch (error) {
             console.error('Error updating news:', error);
+            imageError = error instanceof Error ? error.message : 'Erreur lors de la mise à jour.';
         }
     }
 
@@ -151,6 +131,7 @@
     <div class="form">
         <input type="text" bind:value={newTitle} placeholder="Title" />
         <input type="file" accept="image/*" on:change={selectImage} />
+        {#if imageError}<p class="error">{imageError}</p>{/if}
         <textarea bind:value={newContent} placeholder="Content"></textarea>
         <button on:click={addNews}>Ajouter</button>
     </div>
@@ -162,13 +143,14 @@
             {#if previewImage}
                 <img src={previewImage} alt="Preview" />
             {:else}
-                <img src={`http://localhost:3000${editImage}`} alt="Preview" />
+                <img src={getUploadUrl(editImage)} alt="Preview" />
             {/if}
             <p>{editContent}</p>
         </div>
         <div class="form">
             <input type="text" bind:value={editTitle} placeholder="Title" />
             <input type="file" accept="image/*" on:change={selectImage} />
+            {#if imageError}<p class="error">{imageError}</p>{/if}
             <textarea bind:value={editContent} placeholder="Content"></textarea>
             <div class="adminBtn">
                 <button on:click={updateNews}>Modifier</button>
@@ -182,7 +164,7 @@
             {#each news as item}
                 <li>
                     <h3>{item.title}</h3>
-                    <img src={`http://localhost:3000${item.image}`} alt={item.title} />
+                    <img src={getUploadUrl(item.image)} alt={item.title} />
                     <p>{item.content}</p>
                     <div class="adminBtn">
                         <button on:click={() => startEdit(item)}>Modifier</button>
@@ -196,4 +178,10 @@
 
 <style lang="scss">
     @import '../../../style/adminStyle.scss';
+
+    .error {
+        color: #ff4444;
+        font-size: 0.85rem;
+        margin-top: 0.25rem;
+    }
 </style>

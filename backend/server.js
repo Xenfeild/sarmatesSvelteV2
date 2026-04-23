@@ -7,36 +7,92 @@ const jwt = require('jsonwebtoken');
 const argon2 = require('argon2');
 const sharp = require('sharp'); // Import sharp
 const nodemailer = require('nodemailer');
+const cookieParser = require('cookie-parser');
+const rateLimit = require('express-rate-limit');
 require('dotenv').config();
 
 const app = express();
 const port = process.env.PORT || 3000;
-const secretKey = process.env.JWT_SECRET || 'your_secret_key';
+
+if (!process.env.JWT_SECRET) {
+    console.error('FATAL: JWT_SECRET non défini dans les variables d\'environnement');
+    process.exit(1);
+}
+const secretKey = process.env.JWT_SECRET;
 
 
 //  ***** mailing function *****
 
 //  nodemailer Configuration
 const transporter = nodemailer.createTransport({
-    host: 'smtp.hostinger.com',
-    port: 587,
-    secure: false,
+    host: process.env.SMTP_HOST,
+    port: parseInt(process.env.SMTP_PORT || '587'),
+    secure: process.env.SMTP_SECURE === 'true',
     auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS
     }
 });
 
+// Fonction de validation des emails
+function validateEmail(email) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email) && email.length <= 254;
+}
+
+// Fonction de nettoyage des chaînes de texte brut (emails, noms d'utilisateur)
+function sanitizeString(str, maxLength = 1000) {
+    if (!str || typeof str !== 'string') return '';
+    return str.trim().slice(0, maxLength);
+}
+
+// Fonction de nettoyage avec échappement HTML (protection XSS pour contenu stocké en DB)
+function sanitizeHtml(str, maxLength = 1000) {
+    if (!str || typeof str !== 'string') return '';
+    return str
+        .trim()
+        .slice(0, maxLength)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#x27;');
+}
+
+// Limiteur anti-spam sur le formulaire de contact
+const contactLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 5,
+    message: { error: 'Trop de messages envoyés. Réessayez dans 15 minutes.' },
+    standardHeaders: true,
+    legacyHeaders: false
+});
+    
 // routes for mailing
-app.post('/send-email', (req, res) => {
+app.post('/send-email', contactLimiter, (req, res) => {
     const { firstName, lastName, email, company, message } = req.body;
+    
+    // Validation des données
+    if (!firstName || !lastName || !email || !message) {
+        return res.status(400).json({ error: 'Champs requis manquants' });
+    }
+    
+    if (!validateEmail(email)) {
+        return res.status(400).json({ error: 'Email invalide' });
+    }
+    
+    // Nettoyage et limitation des données
+    const cleanFirstName = sanitizeString(firstName, 50);
+    const cleanLastName = sanitizeString(lastName, 50);
+    const cleanCompany = sanitizeString(company, 100);
+    const cleanMessage = sanitizeString(message, 5000);
 
     const mailOptions = {
-        from: email,
-        to: process.env.EMAIL_USER,
-        subject: 'Contact Form Submission',
-        text: "Name: ${firstName} ${lastName}\nEmail: ${email}\nCompany: ${company}\nMessage: ${message}"
-    };
+    from: email,
+    to: process.env.EMAIL_USER,
+    subject: 'Contact Form Submission',
+    text: `Name: ${cleanFirstName} ${cleanLastName}\nEmail: ${email}\nCompany: ${cleanCompany}\nMessage: ${cleanMessage}`
+};
 
     transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
@@ -65,12 +121,30 @@ const storage = multer.diskStorage({
     }
 });
 
-const upload = multer({ storage: storage });
+// Filtre MIME : seules les images JPEG, PNG et WebP sont autorisées
+const imageFileFilter = (req, file, cb) => {
+    const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/webp'];
+    if (allowedMimeTypes.includes(file.mimetype)) {
+        cb(null, true);
+    } else {
+        cb(new Error('Type de fichier non autorisé. Seules les images JPEG, PNG et WebP sont acceptées.'), false);
+    }
+};
+
+const upload = multer({ storage: storage, fileFilter: imageFileFilter });
 
 // Middleware
-app.use(express.json());
-app.use(cors());
+app.use(express.json({ limit: '10mb' })); // Limiter taille des requêtes
+app.use(cors({
+    origin: process.env.NODE_ENV === 'production'
+        ? (process.env.ALLOWED_ORIGINS || '').split(',').map(o => o.trim()).filter(Boolean)
+        : ['http://localhost:5173', 'http://localhost:3000'],
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 // Servir les fichiers statiques du dossier 'uploads'
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
@@ -87,7 +161,7 @@ const db = new sqlite3.Database(dbPath, (err) => {
 
 // Middleware pour vérifier le token JWT
 function authenticateToken(req, res, next) {
-    const token = req.headers['authorization'];
+    const token = req.cookies.token;
     if (!token) return res.sendStatus(401);
 
     jwt.verify(token, secretKey, (err, user) => {
@@ -97,28 +171,61 @@ function authenticateToken(req, res, next) {
     });
 }
 
+// Limiteur de tentatives de connexion (protection brute force)
+const loginLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 10,
+    message: { error: 'Trop de tentatives de connexion. Réessayez dans 15 minutes.' },
+    standardHeaders: true,
+    legacyHeaders: false
+});
+
 
 // Route pour gérer la connexion
-app.post('/api/login', (req, res) => {
+app.post('/api/login', loginLimiter, (req, res) => {
     const { username, password } = req.body;
+    
+    
+    // Validation des données
+    if (!username || !password) {
+        return res.status(400).json({ error: 'Username et password requis' });
+    }
+    
+    if (username.length > 100 || password.length > 500) {
+        return res.status(400).json({ error: 'Données trop longues' });
+    }
+    
     const sql = 'SELECT * FROM users WHERE username = ?';
-    db.get(sql, [username], (err, user) => {
-        if (err) return res.status(500).json({ error: err.message });
+    db.get(sql, [sanitizeString(username, 100)], (err, user) => {
+        if (err) return res.status(500).json({ error: 'Erreur serveur' });
         if (!user) return res.status(401).json({ error: 'Invalid username or password' });
 
-        argon2.verify(user.password, password).then(match => { // Utiliser argon2.verify
+        argon2.verify(user.password, password).then(match => {
             if (!match) return res.status(401).json({ error: 'Invalid username or password' });
 
             const token = jwt.sign({ username: user.username }, secretKey, { expiresIn: '1h' });
-            res.json({ token });
+            res.cookie('token', token, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production',
+                sameSite: 'strict',
+                maxAge: 3600000
+            });
+            res.json({ success: true });
         }).catch(err => {
-            res.status(500).json({ error: err.message });
+            res.status(500).json({ error: 'Erreur serveur' });
         });
     });
 });
 
-// Routes protégées par l'authentification
-app.use('/api/admin', authenticateToken);
+// Route de déconnexion
+app.post('/api/logout', (req, res) => {
+    res.clearCookie('token', {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict'
+    });
+    res.json({ success: true });
+});
 
 // ******** CRUD opérations ********
 
@@ -128,7 +235,6 @@ app.use('/api/admin', authenticateToken);
 
 // Route pour récupérer tous les articles de news
 app.get('/api/news', (req, res) => {
-    const limit = req.query.limit ? `LIMIT ${req.query.limit}` : '';
     db.all('SELECT * FROM news ORDER BY date DESC', [], (err, rows) => {
         if (err) {
             res.status(500).json({ error: err.message });
@@ -155,8 +261,9 @@ app.get('/api/news/:id', (req, res) => {
 });
 
 // Route pour ajouter un nouvel article de news avec une image
-app.post('/api/news', upload.single('image'), async (req, res) => {
-    const { title, content } = req.body;
+app.post('/api/news', authenticateToken, upload.single('image'), async (req, res) => {
+    const title = sanitizeHtml(req.body.title, 255);
+    const content = sanitizeHtml(req.body.content, 10000);
     let image = null;
     let thumbnail = null;
 
@@ -194,9 +301,10 @@ app.post('/api/news', upload.single('image'), async (req, res) => {
 });
 
 // Route pour mettre à jour un article de news
-app.put('/api/news/:id', upload.single('image'), async (req, res) => {
+app.put('/api/news/:id', authenticateToken, upload.single('image'), async (req, res) => {
     const { id } = req.params;
-    const { title, content } = req.body;
+    const title = sanitizeHtml(req.body.title, 255);
+    const content = sanitizeHtml(req.body.content, 10000);
     let image = req.body.image;
     let thumbnail = req.body.thumbnail;
 
@@ -233,10 +341,10 @@ app.put('/api/news/:id', upload.single('image'), async (req, res) => {
 });
 
 // Route pour supprimer un article de news
-app.delete('/api/news/:id', (req, res) => {
+app.delete('/api/news/:id', authenticateToken, (req, res) => {
     const { id } = req.params;
     console.log(`Received DELETE request for news ID: ${id}`);
-    db.run('DELETE FROM news WHERE id = ?', id, function(err) {
+    db.run('DELETE FROM news WHERE id = ?', [id], function(err) {
         if (err) {
             console.error(`Error deleting news ID: ${id}`, err.message);
             res.status(500).json({ error: err.message });
@@ -257,7 +365,6 @@ app.delete('/api/news/:id', (req, res) => {
 
 // Route pour récupérer tous les événements live
 app.get('/api/live', (req, res) => {
-    const limit = req.query.limit ? `LIMIT ${req.query.limit}` : '';
     db.all('SELECT * FROM live ORDER BY event_date DESC', [], (err, rows) => {
         if (err) {
             res.status(500).json({ error: err.message });
@@ -284,8 +391,11 @@ app.get('/api/live/:id', (req, res) => {
 });
 
 // Route pour ajouter un nouvel événement live avec une image
-app.post('/api/live', upload.single('image'), async (req, res) => {
-    const { event_name, address, event_date, link } = req.body;
+app.post('/api/live', authenticateToken, upload.single('image'), async (req, res) => {
+    const event_name = sanitizeHtml(req.body.event_name, 255);
+    const address = sanitizeHtml(req.body.address, 255);
+    const event_date = sanitizeString(req.body.event_date, 50);
+    const link = sanitizeHtml(req.body.link, 500);
     let image = null;
 
     // image compression precessing and rezising
@@ -312,9 +422,12 @@ app.post('/api/live', upload.single('image'), async (req, res) => {
 });
 
 // Route pour mettre à jour un événement live
-app.put('/api/live/:id', upload.single('image'), async (req, res) => {
+app.put('/api/live/:id', authenticateToken, upload.single('image'), async (req, res) => {
     const { id } = req.params;
-    const { event_name, address, event_date, link } = req.body;
+    const event_name = sanitizeHtml(req.body.event_name, 255);
+    const address = sanitizeHtml(req.body.address, 255);
+    const event_date = sanitizeString(req.body.event_date, 50);
+    const link = sanitizeHtml(req.body.link, 500);
     let image = req.body.image;
 
     if (req.file) {
@@ -340,9 +453,9 @@ app.put('/api/live/:id', upload.single('image'), async (req, res) => {
 });
 
 // Route pour supprimer un événement live
-app.delete('/api/live/:id', (req, res) => {
+app.delete('/api/live/:id', authenticateToken, (req, res) => {
     const { id } = req.params;
-    db.run('DELETE FROM live WHERE id = ?', id, function(err) {
+    db.run('DELETE FROM live WHERE id = ?', [id], function(err) {
         if (err) {
             res.status(500).json({ error: err.message });
             return;
@@ -359,8 +472,11 @@ app.delete('/api/live/:id', (req, res) => {
 // ******* Presse table ********
 
 // Add press
-app.post('/api/press', upload.single('image'), (req, res) => {
-    const { title, content, date, link } = req.body;
+app.post('/api/press', authenticateToken, upload.single('image'), (req, res) => {
+    const title = sanitizeHtml(req.body.title, 255);
+    const content = sanitizeHtml(req.body.content, 10000);
+    const date = sanitizeString(req.body.date, 50);
+    const link = sanitizeHtml(req.body.link, 500);
     const image = req.file ? `/uploads/image/${req.file.filename}` : null;
     const sql = `INSERT INTO press (title, image, content, date, link) VALUES (?, ?, ?, ?, ?)`;
     db.run(sql, [title, image, content, date, link], function(err) {
@@ -374,7 +490,6 @@ app.post('/api/press', upload.single('image'), (req, res) => {
 
 // Route pour récupérer tous les articles de presse
 app.get('/api/press', (req, res) => {
-    const limit = req.query.limit ? `LIMIT ${req.query.limit}` : '';
     const sql = `SELECT * FROM press`;
     db.all(sql, [], (err, rows) => {
         if (err) {
@@ -386,9 +501,12 @@ app.get('/api/press', (req, res) => {
 });
 
 // Route pour mettre à jour un article de presse
-app.put('/api/press/:id', upload.single('image'), (req, res) => {
+app.put('/api/press/:id', authenticateToken, upload.single('image'), (req, res) => {
     const { id } = req.params;
-    const { title, content, date, link } = req.body;
+    const title = sanitizeHtml(req.body.title, 255);
+    const content = sanitizeHtml(req.body.content, 10000);
+    const date = sanitizeString(req.body.date, 50);
+    const link = sanitizeHtml(req.body.link, 500);
     const image = req.file ? `/uploads/image/${req.file.filename}` : req.body.image;
     const sql = `UPDATE press SET title = ?, image = ?, content = ?, date = ?, link = ? WHERE id = ?`;
     db.run(sql, [title, image, content, date, link, id], function(err) {
@@ -405,10 +523,10 @@ app.put('/api/press/:id', upload.single('image'), (req, res) => {
 });
 
 // Route pour supprimer un article de presse
-app.delete('/api/press/:id', (req, res) => {
+app.delete('/api/press/:id', authenticateToken, (req, res) => {
     const { id } = req.params;
     const sql = `DELETE FROM press WHERE id = ?`;
-    db.run(sql, id, function(err) {
+    db.run(sql, [id], function(err) {
         if (err) {
             res.status(500).json({ error: err.message });
             return;
@@ -421,6 +539,14 @@ app.delete('/api/press/:id', (req, res) => {
     });
 });
 
+
+// Gestionnaire d'erreurs global (notamment pour les rejets multer/upload)
+app.use((err, req, res, next) => {
+    if (err) {
+        return res.status(400).json({ error: err.message || 'Erreur lors du traitement de la requête' });
+    }
+    next();
+});
 
 // Démarrer le serveur
 app.listen(port, () => {

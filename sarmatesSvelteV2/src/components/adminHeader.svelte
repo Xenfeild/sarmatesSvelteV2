@@ -1,9 +1,12 @@
 <script lang="ts">
-    import { onMount } from 'svelte';
     import { goto } from '$app/navigation';
+    import { getApiUrl } from '$lib/config';
 
-    function logout() {
-        localStorage.removeItem('token');
+    async function logout() {
+        await fetch(getApiUrl('/api/logout'), {
+            method: 'POST',
+            credentials: 'include'
+        });
         goto('/admin/login');
     }
 </script>
@@ -21,37 +24,50 @@
 </header>
 
 <style lang="scss">
-    @import "../style/adminStyle.scss";
+    $primary-color: #0d0d0d;
+    $secondary-color: #fff;
+    $third-color: #ff9634;
+    $title-font: 'Lexend Exa', sans-serif;
 
     .admin-header {
         display: flex;
-        justify-content: space-around;
+        justify-content: center;
         align-items: center;
         width: 100%;
+        background-color: $primary-color;
         padding: 1rem;
-        background-color: #33333388;
-        color: #fff;
-        margin: 0;
-
+        box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        
         nav ul {
             display: flex;
             list-style: none;
             padding: 0;
+            margin: 0;
+            gap: 2rem;
 
-            li {
-                margin-right: 1rem;
-
-                a, button {
-                    color: #fff;
-                    text-decoration: none;
-                    background: none;
-                    border: none;
-                    cursor: pointer;
-                    font-size: clamp(1rem, 2vw, 1.5rem);
+            li a, li button {
+                color: $secondary-color;
+                text-decoration: none;
+                background: none;
+                border: none;
+                cursor: pointer;
+                font-size: clamp(1rem, 2vw, 1.5rem);
+                font-family: $title-font;
+                padding: 0.5rem;
+                
+                &:hover {
+                    color: $third-color;
                 }
-
-                button:hover, a:hover {
-                    color: #ffda32;
+            }
+            
+            li button {
+                background-color: $third-color;
+                color: $primary-color;
+                border-radius: 5px;
+                
+                &:hover {
+                    background-color: darken($third-color, 10%);
+                    color: $secondary-color;
                 }
             }
         }

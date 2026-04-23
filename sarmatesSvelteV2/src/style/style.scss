@@ -31,20 +31,27 @@ main {
     scroll-behavior:smooth;
 
     /* scroll Firefox */
-    scrollbar-color: $third-color transparent; /* ascenceur orangfe sur fond transparent */
-    scroll-size: thin; /* largeur du thumb */
+    scrollbar-color: $third-color transparent; /* ascenceur orange sur fond transparent */
+    scrollbar-width: thin; /* largeur du thumb */
 }
 
-/* scroll Chrome */
+/* scroll Chrome/Safari/Edge */
 ::-webkit-scrollbar {
-    width: 8px;
+    width: 12px;
 }
+
+::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 6px;
+}
+
 ::-webkit-scrollbar-thumb {
     background-color: $third-color;
-    border-radius: 100rem;
-}
-::-webkit-scrollbar-thumb:hover {
-    background-color: $third-color;
+    border-radius: 6px;
+    
+    &:hover {
+        background-color: darken($third-color, 10%);
+    }
 }
 
 // .test2{
@@ -78,7 +85,7 @@ h2 {
 
 p {
     font-family: $title-font;
-    font-weight: 500;
+    font-weight: 600;
 }
 
 section {
@@ -92,14 +99,16 @@ section {
 
 button  {
     font-size: $font-size;
-    border: none;
+    border: solid 1px;
     border-radius: 5px;
+    border-color: $third-color;
     padding: 1vh;
-    background-color: $third-color;
-    color: $primary-color;
+    background-color: $primary-color;
+    color: $third-color;
     &:hover {
         background-color: darken($third-color, 10%);
-        color: lighten($secondary-color, 10%);
+        color: $primary-color;
+        border-color: $primary-color;
     }
 
     &.close{
@@ -121,7 +130,7 @@ button  {
     }
 
 .container {
-    background-color: #733b279d;
+    background-color: $fourth-color;
     padding: 1rem;
     align-items: center;
     display: flex;
@@ -138,7 +147,7 @@ button  {
 // *** SECTIONS
 
 #news{
-    background-image: url(../lib/img/singerShooting.webp);
+    background-image: url(../lib/img/petroglyphes.svg);
     background-attachment: fixed;
 }
 
@@ -153,28 +162,28 @@ button  {
 
 
 #press{
-    background-image: url(../lib/img/back_sarmates.webp);
+    background-image: url(../lib/img/petroglyphes.svg);
     background-attachment: fixed;
 }
 
 #biography{
-    background-image: url(../lib/img/Sarmates_shoot-29.webp);
+    background-image: url(../lib/img/BRASSERIE_DE_LAPOCALYPSE_LOGO-2.webp);
     // background-attachment: fixed;
 }
 
 #discography{
-    background-image: url(../lib/img/BRASSERIE_DE_LAPOCALYPSE_LOGO-2.webp);
+    background-image: url(../lib/img/petroglyphes.svg);
     background-attachment: fixed;
 }
 
 #galleries{
-    background-image: url(../lib/img/Sarmates_fest_logo-29.webp);
+    background-image: url(../lib/img/BRASSERIE_DE_LAPOCALYPSE-4.webp);
     // background-attachment: fixed;
 }
 
 @media (min-with: 785px){
     .container{
-        background-color: #733b279d;
+        background-color: $fourth-color;
         padding: 1rem;
         align-items: center;
         width: 90%;

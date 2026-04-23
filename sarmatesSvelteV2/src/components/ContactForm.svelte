@@ -1,5 +1,6 @@
 <script lang="ts">
     import { createEventDispatcher } from "svelte";
+    import { getApiUrl } from "$lib/config";
     const dispatch = createEventDispatcher();
 
     export let show = false;
@@ -19,38 +20,32 @@
         sending = true;
         success = null;
         errorMsg = '';
-        // Construction du formData attendu par le PHP
-        const formData = new FormData();
-        formData.append('name', firstName);
-        formData.append('surename', lastName);
-        formData.append('email', email);
-        formData.append('company', company);
-        formData.append('message', message);
         try {
-            const response = await fetch('/routes/admin/contact.php', {
+            const response = await fetch(getApiUrl('/send-email'), {
                 method: 'POST',
-                body: formData
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ firstName, lastName, email, company, message })
             });
             const data = await response.json();
-            if (response.ok && data.status === 200) {
+            if (response.ok) {
                 success = true;
+                dispatch('submit', { firstName, lastName, email, company, message });
                 firstName = lastName = email = company = message = '';
             } else {
                 success = false;
-                errorMsg = data.message || "Erreur lors de l'envoi. Merci de réessayer.";
+                errorMsg = data.error || data.message || "Erreur lors de l'envoi. Merci de réessayer.";
             }
-        } catch (e) {
+        } catch {
             success = false;
             errorMsg = 'Erreur réseau ou serveur.';
         } finally {
             sending = false;
         }
-        dispatch('submit', Object.fromEntries(formData));
     }
 </script>
 
 {#if show}
-    <div class="modal-backdrop" on:click={close}></div>
+    <div class="modal-backdrop" role="button" tabindex="-1" aria-label="Fermer" on:click={close} on:keydown={(e) => e.key === 'Escape' && close()}></div>
     <div class="modal">
         <button class="close" on:click={close}>X</button>
         <form on:submit|preventDefault={handleFormSubmit}>

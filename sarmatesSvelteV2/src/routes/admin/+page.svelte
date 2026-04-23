@@ -4,33 +4,9 @@
     import Cards from '../../components/Cards.svelte';
     import CardsPress from '../../components/CardsPress.svelte';
     import Modal from '../../components/Modal.svelte';
-
-    interface NewsItem {
-        id: number;
-        title: string;
-        image: string;
-        thumbnail: string;
-        content: string;
-        date: string;
-    }
-
-    interface PressItem {
-        id: number;
-        title: string;
-        image: string;
-        content: string;
-        date: string;
-        link: string;
-    }
-
-    interface LiveItem {
-        id: number;
-        event_name: string;
-        image: string;
-        address: string;
-        event_date: string;
-        link: string;
-    }
+    import { getUploadUrl } from '$lib/config';
+    import { api } from '$lib/services/api';
+    import type { NewsItem, PressItem, LiveItem } from '$lib/types';
 
     let news: NewsItem[] = [];
     let press: PressItem[] = [];
@@ -41,22 +17,15 @@
 
     async function fetchData(): Promise<void> {
         try {
-            const token = document.cookie.split('=')[1];
-
-            const newsResponse = await fetch('http://localhost:3000/api/news');
-            if (newsResponse.ok) {
-                news = await newsResponse.json();
-            }
-
-            const pressResponse = await fetch('http://localhost:3000/api/press');
-            if (pressResponse.ok) {
-                press = await pressResponse.json();
-            }
-
-            const liveResponse = await fetch('http://localhost:3000/api/live');
-            if (liveResponse.ok) {
-                live = await liveResponse.json();
-            }
+            const [newsData, pressData, liveData] = await Promise.all([
+                api.getNews(),
+                api.getPress(),
+                api.getLive()
+            ]);
+            
+            news = newsData;
+            press = pressData;
+            live = liveData;
         } catch (error) {
             console.error('Error fetching data:', error);
         }
@@ -74,9 +43,12 @@
 
     onMount(fetchData);
 </script>
+<header>
 
-<main>
+</header>
     <AdminHeader />
+<main>
+    
     <h1>Admin Dashboard</h1>
 
     <section>
@@ -84,11 +56,11 @@
         <h2>Last News</h2>
         <div >
             <ul class="adminList">
-                {#each news.slice(0, 3) as item, index}
+                {#each news.slice(0, 3) as item}
             <li>
                 <Cards 
                     title={item.title} 
-                    thumbnail={`http://localhost:3000${item.thumbnail}`} 
+                    thumbnail={getUploadUrl(item.thumbnail)} 
                     content={item.content} 
                     onClick={() => openModal(item)} 
                 />
@@ -101,11 +73,11 @@
     <section>
         <h2>Last Press</h2>
         <ul class="adminList">
-            {#each press.slice(0, 3) as item, index}
+            {#each press.slice(0, 3) as item}
             <li>
                 <CardsPress 
                     title={item.title} 
-                    image={`http://localhost:3000${item.image}`} 
+                    image={getUploadUrl(item.image)} 
                     content={item.content} 
                     link={item.link} 
                     onClick={() => openModal(item)} 
@@ -118,11 +90,11 @@
     <section>
         <h2>Last Live Events</h2>
         <ul class="adminList">
-            {#each live.slice(0, 3) as item, index}
+            {#each live.slice(0, 3) as item}
                 <li>
                     <Cards 
                         title={item.event_name} 
-                        thumbnail={`http://localhost:3000${item.image}`} 
+                        thumbnail={getUploadUrl(item.image)} 
                         content={item.address} 
                         onClick={() => openModal(item)} 
                         />
@@ -135,7 +107,7 @@
         {#if 'event_name' in selectedItem}
             <Modal
                 title={selectedItem.event_name}
-                image={`http://localhost:3000${selectedItem.image}`}
+                image={getUploadUrl(selectedItem.image)}
                 content={selectedItem.address}
                 date={selectedItem.event_date}
                 link={selectedItem.link}
@@ -144,7 +116,7 @@
         {:else if 'link' in selectedItem}
             <Modal
                 title={selectedItem.title}
-                image={`http://localhost:3000${selectedItem.image}`}
+                image={getUploadUrl(selectedItem.image)}
                 content={selectedItem.content}
                 date={selectedItem.date}
                 link={selectedItem.link}
@@ -153,7 +125,7 @@
         {:else}
             <Modal
                 title={selectedItem.title}
-                image={`http://localhost:3000${selectedItem.image}`}
+                image={getUploadUrl(selectedItem.image)}
                 content={selectedItem.content}
                 date={selectedItem.date}
                 onClose={closeModal}
@@ -169,39 +141,6 @@
     ul {
         list-style: none;
         padding: 0;
-    }
-
-    .adminList {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-between;
-        .modalImg {
-            width: 290px;
-            height: 300px;
-            display: flex;
-            justify-content: center;
-            flex-direction: column;
-            align-items: center;
-            margin: 1rem;
-        }
-        li {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            margin: 1rem;
-            width: 300px;
-            text-align: center;
-            border: 2px solid transparent;
-            h3 {
-                margin: 1rem;
-                text-shadow: 4px 4px 3px #000000;
-            }
-            img {
-                width: 500px;
-                object-fit: cover;
-            }
-        }
     }
 
     .modal-toggle {
