@@ -9,7 +9,7 @@ const sharp = require('sharp'); // Import sharp
 const nodemailer = require('nodemailer');
 const cookieParser = require('cookie-parser');
 const rateLimit = require('express-rate-limit');
-require('dotenv').config();
+require('dotenv').config({ path: path.join(__dirname, '.env') });
 
 const app = express();
 const port = process.env.PORT || 3000;

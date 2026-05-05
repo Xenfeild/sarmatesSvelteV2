@@ -1,7 +1,8 @@
 const sqlite3 = require('sqlite3').verbose();
-const db = new sqlite3.Database('./db.sqlite3');
+const path = require('path');
+const db = new sqlite3.Database(path.join(__dirname, 'db.sqlite3'));
 const argon2 = require('argon2');
-require('dotenv').config();
+require('dotenv').config({ path: path.join(__dirname, '.env') });
 
 db.serialize(() => {
     // Table news
