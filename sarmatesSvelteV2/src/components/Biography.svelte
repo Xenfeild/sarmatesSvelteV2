@@ -24,7 +24,7 @@
     // Contenu biographie complète pour la modale
     $: fullBiographyContent = {
         name: "Sarmates",
-        image: "src/lib/img/fire.webp",
+        image: "/img/fire.webp",
         role: $translations.biography,
         content: `${$translations.biography1}
 
@@ -33,39 +33,39 @@ ${$translations.biography2}
 ${$translations.biography3}`,
         // Images supplémentaires pour la modale
         additionalImages: [
-            "src/lib/img/concert-85.webp",
-            "src/lib/img/concert-14.webp"
+            "/img/concert-85.webp",
+            "/img/concert-14.webp"
         ]
     };
 
     $: biographyItems = [
         {
             name: "Laurent Broda",
-            image: "src/lib/img/singer_bio.webp",
+            image: "/img/singer_bio.webp",
             role: $translations.singer,
             content: $translations.singerBio
         },
         {
             name: "Davroriin Sirok",
-            image: "src/lib/img/saz_bio.webp",
+            image: "/img/saz_bio.webp",
             role: $translations.sarmata,
             content: $translations.sarmataBio
         },
         {
             name: "Victor Poulain",
-            image: "src/lib/img/guitar_bio.webp",
+            image: "/img/guitar_bio.webp",
             role: $translations.guitar,
             content: $translations.guitarBio
         },
         {
             name: "Antonio Xenfeild",
-            image: "src/lib/img/bass_bio.webp",
+            image: "/img/bass_bio.webp",
             role: $translations.bass,
             content: $translations.bassBio
         },
         {
             name: "Jérémy Marie",
-            image: "src/lib/img/drum_bio.webp",
+            image: "/img/drum_bio.webp",
             role: $translations.drum,
             content: $translations.drumBio
         }
@@ -80,7 +80,7 @@ ${$translations.biography3}`,
             <!-- biography Content - Introduction toujours visible -->
             <div class="paragraph">
                 <p>{$translations.biography1}</p>
-                <img src="src/lib/img/fire.webp" alt="Fire" loading="lazy">
+                <img src="/img/fire.webp" alt="Fire" loading="lazy">
             </div>
             <button on:click={() => selectBiography(fullBiographyContent)} title="voir biographie complète">
                 Voir la biographie complète

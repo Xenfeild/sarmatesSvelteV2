@@ -23,15 +23,15 @@
                 <!-- Contenu spécial pour la biographie complète -->
                 <div class="paragraph">
                     <p>{content.split('\n\n')[0]}</p>
-                    <img src="src/lib/img/fire.webp" alt="Feu sur scène lors d'un concert de Sarmates" loading="lazy" />
+                    <img src="/img/fire.webp" alt="Feu sur scène lors d'un concert de Sarmates" loading="lazy" />
                 </div>
                 <div class="paragraph">
-                    <img src="src/lib/img/concert-85.webp" alt="Concert Sarmates" loading="lazy" />
+                    <img src="/img/concert-85.webp" alt="Concert Sarmates" loading="lazy" />
                     <p>{content.split('\n\n')[1]}</p>
                 </div>
                 <div class="paragraph">
                     <p>{content.split('\n\n')[2]}</p>
-                    <img src="src/lib/img/concert-14.webp" alt="Scène Sarmates" loading="lazy" />
+                    <img src="/img/concert-14.webp" alt="Scène Sarmates" loading="lazy" />
                 </div>
             {:else}
                 <!-- Contenu normal pour les membres -->
