@@ -18,11 +18,28 @@
     // language selector
     let selectedFlag = englishFlag;
   
+    function getLangCookie(): string | undefined {
+      return document.cookie.split('; ').find(r => r.startsWith('lang='))?.split('=')[1];
+    }
+
+    function setLangCookie(lang: string) {
+      document.cookie = `lang=${lang}; path=/; max-age=31536000; SameSite=Lax`;
+    }
+
     onMount(() => {
-      loadTranslations('fr'); // Charger les traductions par défaut
+      const savedLang = getLangCookie();
+      if (savedLang) {
+        handleLanguageChange(savedLang);
+      } else {
+        const browserLang = (navigator.language || 'en').split('-')[0];
+        const supportedLangs = ['fr', 'es', 'en'];
+        const detectedLang = supportedLangs.includes(browserLang) ? browserLang : 'en';
+        handleLanguageChange(detectedLang);
+      }
     });
   
     function handleLanguageChange(lang: string) {
+      setLangCookie(lang);
       loadTranslations(lang);
       switch (lang) {
         case 'fr':

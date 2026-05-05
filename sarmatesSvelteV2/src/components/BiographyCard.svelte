@@ -13,7 +13,7 @@
 
 <div class="biography-card" role="button" tabindex="0" on:click={onClick} on:keydown={handleKeydown}>
     <h3>{name}</h3>
-    <img src={image} alt={name} />
+    <img src={image} alt={name} loading="lazy" />
     <p class="role">{role}</p>
 </div>
 

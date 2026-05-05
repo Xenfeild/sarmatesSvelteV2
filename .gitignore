@@ -4,6 +4,20 @@ dist/
 
 # Environment variables
 .env
+.env.local
+.env.production
+
+# Base de données
+*.sqlite3
+*.sqlite
+*.db
+
+# Uploads (images utilisateurs)
+backend/uploads/
+
+# Build frontend
+sarmatesSvelteV2/build/
+sarmatesSvelteV2/.svelte-kit/
 
 # Logs
 logs/
@@ -16,3 +30,4 @@ yarn-error.log*
 .vscode/
 .idea/
 .DS_Store
+Thumbs.db

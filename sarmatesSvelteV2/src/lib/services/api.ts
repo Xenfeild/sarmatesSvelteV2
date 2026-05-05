@@ -17,7 +17,6 @@ class ApiService {
      */
     async get<T>(endpoint: string): Promise<T[]> {
         try {
-            console.log(`[API] GET ${endpoint}`);
             const response = await fetch(`${this.baseUrl}${endpoint}`, {
                 credentials: 'include'
             });
@@ -27,7 +26,6 @@ class ApiService {
             }
             
             const data = await response.json();
-            console.log(`[API] GET ${endpoint} - Success:`, data.length, 'items');
             return data;
         } catch (error) {
             console.error(`[API] GET ${endpoint} - Error:`, error);
@@ -40,7 +38,6 @@ class ApiService {
      */
     async post<T>(endpoint: string, data: FormData): Promise<T> {
         try {
-            console.log(`[API] POST ${endpoint}`);
             const response = await fetch(`${this.baseUrl}${endpoint}`, {
                 method: 'POST',
                 credentials: 'include',
@@ -56,7 +53,6 @@ class ApiService {
             }
 
             const result = await response.json();
-            console.log(`[API] POST ${endpoint} - Success`);
             return result;
         } catch (error) {
             console.error(`[API] POST ${endpoint} - Error:`, error);
@@ -69,7 +65,6 @@ class ApiService {
      */
     async put<T>(endpoint: string, id: number, data: FormData): Promise<T> {
         try {
-            console.log(`[API] PUT ${endpoint}/${id}`);
             const response = await fetch(`${this.baseUrl}${endpoint}/${id}`, {
                 method: 'PUT',
                 credentials: 'include',
@@ -85,7 +80,6 @@ class ApiService {
             }
 
             const result = await response.json();
-            console.log(`[API] PUT ${endpoint}/${id} - Success`);
             return result;
         } catch (error) {
             console.error(`[API] PUT ${endpoint}/${id} - Error:`, error);
@@ -98,7 +92,6 @@ class ApiService {
      */
     async delete(endpoint: string, id: number): Promise<void> {
         try {
-            console.log(`[API] DELETE ${endpoint}/${id}`);
             const response = await fetch(`${this.baseUrl}${endpoint}/${id}`, {
                 method: 'DELETE',
                 credentials: 'include'
@@ -112,7 +105,6 @@ class ApiService {
                 throw new Error(serverMessage);
             }
 
-            console.log(`[API] DELETE ${endpoint}/${id} - Success`);
         } catch (error) {
             console.error(`[API] DELETE ${endpoint}/${id} - Error:`, error);
             throw error;

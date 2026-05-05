@@ -1,5 +1,7 @@
 
+/** @param {string} lang */
 export async function loadTranslations(lang) {
+    /** @type {{ title?: string; description?: string; [key: string]: any }} */
     let translations = {};
     try {
         const response = await fetch(`/locales/${lang}.json`);
@@ -7,11 +9,10 @@ export async function loadTranslations(lang) {
             throw new Error(`Failed to load translations for ${lang}`);
         }
         translations = await response.json();
-        console.log("Loaded translations:", translations); // Ajout de log pour vérifier les traductions chargées
-        document.title = translations.title;
+        document.title = translations.title ?? '';
         const metaDescription = document.querySelector('meta[name="description"]');
         if (metaDescription) {
-            metaDescription.setAttribute('content', translations.description);
+            metaDescription.setAttribute('content', translations.description ?? '');
         }
         document.documentElement.lang = lang;
     } catch (error) {

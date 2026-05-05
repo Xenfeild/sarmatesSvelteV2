@@ -59,7 +59,6 @@
 
         try {
             await api.createLive(formData);
-            console.log('Live event added successfully');
             await fetchLive();
             newEventName = '';
             newAddress = '';
@@ -76,9 +75,7 @@
 
     async function deleteLive(id: number): Promise<void> {
         try {
-            console.log(`Sending DELETE request for live event ID: ${id}`);
             await api.deleteLive(id);
-            console.log('Live event deleted successfully');
             await fetchLive();
         } catch (error) {
             console.error('Error deleting live event:', error);

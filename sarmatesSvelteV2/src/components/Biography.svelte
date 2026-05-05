@@ -80,7 +80,7 @@ ${$translations.biography3}`,
             <!-- biography Content - Introduction toujours visible -->
             <div class="paragraph">
                 <p>{$translations.biography1}</p>
-                <img src="src/lib/img/fire.webp" alt="Fire">
+                <img src="src/lib/img/fire.webp" alt="Fire" loading="lazy">
             </div>
             <button on:click={() => selectBiography(fullBiographyContent)} title="voir biographie complète">
                 Voir la biographie complète

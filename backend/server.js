@@ -96,10 +96,9 @@ app.post('/send-email', contactLimiter, (req, res) => {
 
     transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
-            console.log(error);
+            console.error(error);
             res.status(500).json({ error: 'Internal Server Error' });
         } else {
-            console.log('Email sent: ' + info.response);
             res.status(200).json({ message: 'Email sent' });
         }
     });
@@ -111,12 +110,10 @@ app.post('/send-email', contactLimiter, (req, res) => {
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         const uploadPath = path.join(__dirname, 'uploads', 'image');
-        console.log(`Uploading file to: ${uploadPath}`);
         cb(null, uploadPath);
     },
     filename: (req, file, cb) => {
         const filename = Date.now() + path.extname(file.originalname);
-        console.log(`Saving file as: ${filename}`);
         cb(null, filename);
     }
 });
@@ -131,7 +128,7 @@ const imageFileFilter = (req, file, cb) => {
     }
 };
 
-const upload = multer({ storage: storage, fileFilter: imageFileFilter });
+const upload = multer({ storage: storage, fileFilter: imageFileFilter, limits: { fileSize: 5 * 1024 * 1024 } });
 
 // Middleware
 app.use(express.json({ limit: '10mb' })); // Limiter taille des requêtes
@@ -156,7 +153,6 @@ const db = new sqlite3.Database(dbPath, (err) => {
         console.error('Erreur de connexion à la base de données:', err);
         return;
     }
-    console.log('Connecté à la base de données SQLite');
 });
 
 // Middleware pour vérifier le token JWT
@@ -343,7 +339,6 @@ app.put('/api/news/:id', authenticateToken, upload.single('image'), async (req, 
 // Route pour supprimer un article de news
 app.delete('/api/news/:id', authenticateToken, (req, res) => {
     const { id } = req.params;
-    console.log(`Received DELETE request for news ID: ${id}`);
     db.run('DELETE FROM news WHERE id = ?', [id], function(err) {
         if (err) {
             console.error(`Error deleting news ID: ${id}`, err.message);
@@ -355,7 +350,6 @@ app.delete('/api/news/:id', authenticateToken, (req, res) => {
             res.status(404).json({ error: 'News not found' });
             return;
         }
-        console.log(`News ID: ${id} deleted successfully`);
         res.status(200).json({ message: 'News deleted successfully' });
     });
 });
@@ -472,16 +466,28 @@ app.delete('/api/live/:id', authenticateToken, (req, res) => {
 // ******* Presse table ********
 
 // Add press
-app.post('/api/press', authenticateToken, upload.single('image'), (req, res) => {
+app.post('/api/press', authenticateToken, upload.single('image'), async (req, res) => {
     const title = sanitizeHtml(req.body.title, 255);
     const content = sanitizeHtml(req.body.content, 10000);
     const date = sanitizeString(req.body.date, 50);
     const link = sanitizeHtml(req.body.link, 500);
-    const image = req.file ? `/uploads/image/${req.file.filename}` : null;
+    let image = null;
+
+    if (req.file) {
+        const outputPath = path.join(__dirname, 'uploads', 'image', `${Date.now()}.webp`);
+        try {
+            await sharp(req.file.path).toFormat('webp').toFile(outputPath);
+            image = `/uploads/image/${path.basename(outputPath)}`;
+            require('fs').unlink(req.file.path, () => {});
+        } catch (err) {
+            return res.status(500).json({ error: 'Erreur traitement image' });
+        }
+    }
+
     const sql = `INSERT INTO press (title, image, content, date, link) VALUES (?, ?, ?, ?, ?)`;
     db.run(sql, [title, image, content, date, link], function(err) {
         if (err) {
-            res.status(500).json({ error: err.message });
+            res.status(500).json({ error: 'Erreur serveur' });
             return;
         }
         res.status(201).json({ id: this.lastID });
@@ -501,17 +507,29 @@ app.get('/api/press', (req, res) => {
 });
 
 // Route pour mettre à jour un article de presse
-app.put('/api/press/:id', authenticateToken, upload.single('image'), (req, res) => {
+app.put('/api/press/:id', authenticateToken, upload.single('image'), async (req, res) => {
     const { id } = req.params;
     const title = sanitizeHtml(req.body.title, 255);
     const content = sanitizeHtml(req.body.content, 10000);
     const date = sanitizeString(req.body.date, 50);
     const link = sanitizeHtml(req.body.link, 500);
-    const image = req.file ? `/uploads/image/${req.file.filename}` : req.body.image;
+    let image = req.body.image;
+
+    if (req.file) {
+        const outputPath = path.join(__dirname, 'uploads', 'image', `${Date.now()}.webp`);
+        try {
+            await sharp(req.file.path).toFormat('webp').toFile(outputPath);
+            image = `/uploads/image/${path.basename(outputPath)}`;
+            require('fs').unlink(req.file.path, () => {});
+        } catch (err) {
+            return res.status(500).json({ error: 'Erreur traitement image' });
+        }
+    }
+
     const sql = `UPDATE press SET title = ?, image = ?, content = ?, date = ?, link = ? WHERE id = ?`;
     db.run(sql, [title, image, content, date, link, id], function(err) {
         if (err) {
-            res.status(500).json({ error: err.message });
+            res.status(500).json({ error: 'Erreur serveur' });
             return;
         }
         if (this.changes === 0) {

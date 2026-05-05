@@ -1,32 +1,3 @@
-<style lang="scss">
-	/* @import "../src/style/style.scss"; */
-	* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    list-style: none;
-    align-items: center;
-    text-decoration: none;
-}
-</style>
-<!-- script for dynamic switch languages -->
-<script>
-	document.addEventListener('DOMContentLoaded', function() {
-		const userLang = navigator.language || navigator.userLanguage;
-		const lang = userLang.split('-')[0]; 
-		document.getElementById('html-root').lang = lang;
-
-		//  Load translations
-		fetch(`locales/${lang}.json`)
-			.then(response => response.json())
-			.then(translations => {
-				document.title = translations.title;
-				document.querySelector('meta[name="description"]').setAttribute('content', translations.description);
-			})
-			.catch(error => console.error('Error loading translation', error));
-	});
- </script>
-
 <!doctype html>
 <html id="html-root" lang="en">
 	<head>
@@ -35,7 +6,6 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		%sveltekit.head%
 		<meta name="description" content="Sarmates site officiel">
-		<!-- <link rel="icon" href="img/favicon.ico" type="image/x-icon"> -->
 		<title>Sarmates Music</title>
 		<!-- google font -->
 		<link rel="preconnect" href="https://fonts.googleapis.com">
@@ -48,9 +18,34 @@
 		<link rel="alternate" href=":https://example.com/fr" hreflang="fr" />
 		<link rel="alternate" href=":https//example.com/en" hreflang="en" />
 		<link rel="alternate" href=":https//example.com/es" hreflang="es" />
+		<style>
+			* {
+				margin: 0;
+				padding: 0;
+				box-sizing: border-box;
+				list-style: none;
+				align-items: center;
+				text-decoration: none;
+			}
+		</style>
+		<!-- script for dynamic switch languages -->
+		<script>
+			document.addEventListener('DOMContentLoaded', function() {
+				const userLang = navigator.language || navigator.userLanguage;
+				const lang = userLang.split('-')[0];
+				document.getElementById('html-root').lang = lang;
+
+				fetch(`locales/${lang}.json`)
+					.then(response => response.json())
+					.then(translations => {
+						document.title = translations.title;
+						document.querySelector('meta[name="description"]').setAttribute('content', translations.description);
+					})
+					.catch(error => console.error('Error loading translation', error));
+			});
+		</script>
 	</head>
 	<body data-sveltekit-preload-data="hover">
 		<div style="display: contents">%sveltekit.body%</div>
 	</body>
-	
 </html>

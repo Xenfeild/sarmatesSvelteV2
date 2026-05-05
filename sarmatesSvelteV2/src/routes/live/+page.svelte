@@ -36,7 +36,7 @@
                 {#each liveItems as item}
                     <div class="liveItem">
                         <div class="top">
-                            <img src={getUploadUrl(item.image)} alt={item.event_name} />
+                            <img src={getUploadUrl(item.image)} alt={item.event_name} loading="lazy" />
                         </div>
                         <div class="middle">
                             <h2>{item.event_name}</h2>

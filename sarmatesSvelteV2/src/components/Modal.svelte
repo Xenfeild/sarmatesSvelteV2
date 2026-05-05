@@ -20,7 +20,7 @@
         <button class="close" on:click={onClose} aria-label="Close modal">&times;</button>
         <h2>{title}</h2>
         <div class="modal-body">
-            <img src={image} alt={title} />
+            <img src={image} alt={title} loading="lazy" />
             <p>{content}</p>
             {#if date}
                 <p>{date}</p>

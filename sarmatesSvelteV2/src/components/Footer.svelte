@@ -28,8 +28,6 @@
    * @param {CustomEvent} event
    */
   function handleFormSubmit(event) {
-      const formData = event.detail;
-      console.log('Form data :', formData);
       closeModal();
   }
 

@@ -139,7 +139,7 @@
   <div class="carousel">
     {#if images.length > 0}
         <button class="carousel-img-btn" on:click={() => openModal(images[currentIndex])} aria-label="Agrandir la photo {currentIndex + 1} de la galerie">
-            <img src={images[currentIndex]} alt="Galerie Sarmates {currentIndex + 1}">
+            <img src={images[currentIndex]} alt="Galerie Sarmates {currentIndex + 1}" loading="lazy">
         </button>
         <div class="carousel-buttons">
             <button class="carousel-button" on:click={prev}>❮</button>
@@ -151,6 +151,6 @@
     <div class="modal" role="dialog" aria-modal="true">
         <button class="modal-backdrop" on:click={closeModal} aria-label="Fermer la galerie"></button>
         <button class="modal-close" on:click={closeModal} aria-label="Fermer">&times;</button>
-        <img src={modalImage} alt="Vue agrandie - galerie Sarmates">
+        <img src={modalImage} alt="Vue agrandie - galerie Sarmates" loading="lazy">
     </div>
 {/if}

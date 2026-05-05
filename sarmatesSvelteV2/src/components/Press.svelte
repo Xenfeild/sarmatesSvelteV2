@@ -2,6 +2,7 @@
     import { onMount } from "svelte";
     import { translations, loadTranslations } from '../stores/translationStore';
     import { api } from '$lib/services/api';
+    import { getUploadUrl } from '$lib/config';
     import type { PressItem } from '$lib/types';
     import Card from "./CardsPress.svelte";
 
@@ -30,7 +31,7 @@
         {#each press as item}
             <Card
                 title={item.title}
-                image={item.image}
+                image={getUploadUrl(item.image)}
                 content={item.content}
                 link={item.link}
             />

@@ -65,6 +65,7 @@
             {:else if success === false}
                 <p style="color:red;">{errorMsg}</p>
             {/if}
+        </form>
     </div>
 {/if}
 

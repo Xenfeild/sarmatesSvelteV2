@@ -3,8 +3,15 @@
     export let image: string;
     export let content: string;
     export let link: string;
+    export let onClick: (() => void) | undefined = undefined;
 
-    
+    function handleClick(e: MouseEvent) {
+        if (onClick) {
+            e.preventDefault();
+            onClick();
+        }
+    }
+
     function getExcerpt(content: string, length: number = 50): string {
         if (!content) return '';
         return content.length > length ? content.substring(0, length) + '...' : content;
@@ -12,11 +19,10 @@
 </script>
 
 
-<!-- <div class="card" tabindex="0" on:click={onClick} on:keydown={handleKeydown}> -->
-<a class="card" href={link} target="_blank" tabindex="0">
+<a class="card" href={link} target="_blank" tabindex="0" on:click={handleClick}>
     <h3>{title}</h3>
     <div class="imgBox">
-        <img src={image} alt={title} />
+        <img src={image} alt={title} loading="lazy" />
     </div>
     <p class="excerpt">{getExcerpt(content)}</p>
 </a>

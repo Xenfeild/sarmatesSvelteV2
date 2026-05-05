@@ -19,7 +19,7 @@
 <div class="card" role="button" tabindex="0" on:click={onClick} on:keydown={handleKeydown}>
     <h3>{title}</h3>
     <div class="imgBox">
-        <img src={thumbnail} alt={title} />
+        <img src={thumbnail} alt={title} loading="lazy" />
     </div>
     <p class="excerpt">{getExcerpt(content)}</p>
 </div>
