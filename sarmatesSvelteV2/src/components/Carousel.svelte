@@ -62,10 +62,10 @@
       display: block;
       object-fit: cover;
       cursor: pointer;
-      &:hover{
-        border: 10px;
-        border-color: #ff9634;
-      }
+      // &:hover{
+      //   border: 10px;
+      //   border-color: #ff9634;
+      // }
     }
     .carousel-buttons {
       position: absolute;
@@ -124,6 +124,10 @@
         width: 100%;
         height: 100%;
         z-index: 0;
+        &:hover {
+            background: transparent;
+            border: none;
+        }
     }
 
     .carousel-img-btn {
