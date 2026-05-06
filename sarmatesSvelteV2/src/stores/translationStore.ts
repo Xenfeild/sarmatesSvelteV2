@@ -15,6 +15,7 @@ async function loadTranslations(lang: string) {
         }
         const data: Translations = await response.json();
         translations.set(data);
+        document.documentElement.lang = lang;
     } catch (error) {
         console.error("Error loading translations:", error);
     }
