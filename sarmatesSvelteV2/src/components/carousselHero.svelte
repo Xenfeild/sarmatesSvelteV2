@@ -35,7 +35,7 @@
             type: 'image', 
             src: leoff1Img,
             alt: 'Hellfest off affiche', 
-            text: 'caption2', 
+            text: 'caption4', 
             cta: { url: '#galleries', text: 'watchVideo' }
         },
         { 
