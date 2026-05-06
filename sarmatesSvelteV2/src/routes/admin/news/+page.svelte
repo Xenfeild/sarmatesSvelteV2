@@ -12,6 +12,7 @@
     let editId: number | null = null;
     let editTitle: string = '';
     let editImage: string = '';
+    let editThumbnail: string = '';
     let editContent: string = '';
     let previewImage: string | null = null;
     let imageError: string = '';
@@ -81,6 +82,7 @@
         editId = item.id;
         editTitle = item.title;
         editImage = item.image;
+        editThumbnail = item.thumbnail;
         editContent = item.content;
         previewImage = getUploadUrl(item.image);
 
@@ -103,6 +105,7 @@
             formData.append('image', newImage);
         } else {
             formData.append('image', editImage);
+            formData.append('thumbnail', editThumbnail);
         }
 
         try {
@@ -111,6 +114,7 @@
             editId = null;
             editTitle = '';
             editImage = '';
+            editThumbnail = '';
             editContent = '';
             previewImage = null;
             imageError = '';
