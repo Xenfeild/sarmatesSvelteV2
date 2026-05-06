@@ -44,7 +44,7 @@ export function getApiUrl(endpoint: string) {
 // Helper pour les images uploadées
 export function getUploadUrl(imagePath: string) {
     if (!imagePath) return '';
-    return imagePath.startsWith('/uploads') 
-        ? `${API_CONFIG.BASE_URL}${imagePath}`
-        : imagePath;
+    // Retourne un chemin relatif pour que Nginx serve les uploads directement
+    if (imagePath.startsWith('/uploads')) return imagePath;
+    return imagePath;
 }
