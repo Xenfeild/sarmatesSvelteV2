@@ -36,7 +36,7 @@
             src: leoff1Img,
             alt: 'Hellfest off affiche', 
             text: 'caption4', 
-            cta: { url: '#galleries', text: 'watchVideo' }
+            cta: { url: '#galleries', text: 'seeNews' }
         },
         { 
             type: 'video', 
