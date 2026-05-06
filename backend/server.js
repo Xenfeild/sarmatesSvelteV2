@@ -202,7 +202,7 @@ app.post('/api/login', loginLimiter, (req, res) => {
             const token = jwt.sign({ username: user.username }, secretKey, { expiresIn: '1h' });
             res.cookie('token', token, {
                 httpOnly: true,
-                secure: process.env.NODE_ENV === 'production',
+                secure: process.env.COOKIE_SECURE === 'true',
                 sameSite: 'strict',
                 maxAge: 3600000
             });
@@ -217,7 +217,7 @@ app.post('/api/login', loginLimiter, (req, res) => {
 app.post('/api/logout', (req, res) => {
     res.clearCookie('token', {
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
+        secure: process.env.COOKIE_SECURE === 'true',
         sameSite: 'strict'
     });
     res.json({ success: true });
