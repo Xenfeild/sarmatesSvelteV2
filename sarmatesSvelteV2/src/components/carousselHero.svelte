@@ -4,8 +4,8 @@
     import { translations, loadTranslations } from "../stores/translationStore";
 
     // Imports images résolus par Vite (valides en dev et en prod)
-    import pochetteDesktop from '$lib/img/pochette_sarmates.png';
-    import pochetteMobile from '$lib/img/m/pochette_sarmates.png';
+    import pochetteDesktop from '$lib/img/backgroundSarmates.webp';
+    import pochetteMobile from '$lib/img/m/backgroundSarmates.webp';
     import leoff1Img from '$lib/img/leoff1.webp';
     import sarmates29Img from '$lib/img/Sarmates_shoot-29.webp';
     import spotifyLogo from '$lib/img/spotify.webp';
