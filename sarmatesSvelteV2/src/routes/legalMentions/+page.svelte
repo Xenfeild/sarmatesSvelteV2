@@ -5,12 +5,14 @@
     import Header from "../../components/header.svelte";
 
     onMount(() => {
-        const userLang = navigator.language || navigator.language; // Assurez-vous que navigator.language est défini
-        const lang = userLang ? userLang.split('-')[0] : 'en'; // Utilisez 'en' comme langue par défaut si userLang est null
-        if (lang) {
-            loadTranslations(lang);
+        const savedLang = document.cookie.split('; ').find(r => r.startsWith('lang='))?.split('=')[1];
+        if (savedLang) {
+            loadTranslations(savedLang);
         } else {
-            console.error('Unable to determine user language');
+            const browserLang = (navigator.language || 'en').split('-')[0];
+            const supportedLangs = ['fr', 'es', 'en'];
+            const lang = supportedLangs.includes(browserLang) ? browserLang : 'en';
+            loadTranslations(lang);
         }
     }); 
 </script>

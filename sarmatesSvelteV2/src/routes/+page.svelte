@@ -12,9 +12,15 @@
     import Footer from "../components/Footer.svelte";
 
     onMount(() => {
-        const userLang = navigator.language || navigator.language;
-        const lang = userLang.split('-')[0]; // 'fr', 'en', 'es'
-        loadTranslations(lang);
+        const savedLang = document.cookie.split('; ').find(r => r.startsWith('lang='))?.split('=')[1];
+        if (savedLang) {
+            loadTranslations(savedLang);
+        } else {
+            const browserLang = (navigator.language || 'en').split('-')[0];
+            const supportedLangs = ['fr', 'es', 'en'];
+            const lang = supportedLangs.includes(browserLang) ? browserLang : 'en';
+            loadTranslations(lang);
+        }
     });
 </script>
 
