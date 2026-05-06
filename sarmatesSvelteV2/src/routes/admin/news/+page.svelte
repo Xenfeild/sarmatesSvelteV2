@@ -85,6 +85,7 @@
         editThumbnail = item.thumbnail;
         editContent = item.content;
         previewImage = getUploadUrl(item.image);
+        newImage = null;
 
         // Faire défiler la page vers l'élément <h2>Editer Actualité</h2>
         setTimeout(() => {
