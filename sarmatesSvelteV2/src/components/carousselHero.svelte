@@ -36,7 +36,7 @@
             src: leoff1Img,
             alt: 'Hellfest off affiche', 
             text: 'caption4', 
-            cta: { url: '#galleries', text: 'seeNews' }
+            cta: { url: '#news', text: 'seeNews' }
         },
         { 
             type: 'video', 
@@ -83,13 +83,15 @@
                     {#if item.srcMobile}
                         <picture>
                             <source media="(max-width: 785px)" srcset={item.srcMobile}>
-                            <img src={item.src} alt={item.alt} />
+                            <img src={item.src} alt={item.alt} loading={index === 0 ? 'eager' : 'lazy'} />
                         </picture>
                     {:else}
-                        <img src={item.src} alt={item.alt} />
+                        <img src={item.src} alt={item.alt} loading={index === 0 ? 'eager' : 'lazy'} />
                     {/if}
                 {:else if item.type === 'video'}
-                    <video src={item.src} muted loop autoplay></video>
+                    {#if $currentIndex === index}
+                        <video src={item.src} muted loop autoplay playsinline></video>
+                    {/if}
                 {/if}
                 <div class="carousel-caption">
                     <p>{$translations[item.text]}</p>
