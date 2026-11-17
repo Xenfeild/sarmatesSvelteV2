@@ -32,13 +32,6 @@
             ]
         },
         { 
-            type: 'image', 
-            src: leoff1Img,
-            alt: 'Hellfest off affiche', 
-            text: 'caption4', 
-            cta: { url: '#news', text: 'seeNews' }
-        },
-        { 
             type: 'video', 
             src: '/introSarmates.mp4', 
             alt: 'Video 1', 
