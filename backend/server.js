@@ -20,6 +20,16 @@ if (!process.env.JWT_SECRET) {
 }
 const secretKey = process.env.JWT_SECRET;
 
+// Middleware requis par les routes JSON et les requêtes cross-origin.
+app.use(express.json({ limit: '32kb' }));
+app.use(cors({
+    origin: process.env.NODE_ENV === 'production'
+        ? (process.env.ALLOWED_ORIGINS || '').split(',').map(o => o.trim()).filter(Boolean)
+        : ['http://localhost:5173', 'http://localhost:3000'],
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
 
 //  ***** mailing function *****
 
@@ -70,28 +80,46 @@ const contactLimiter = rateLimit({
     
 // routes for mailing
 app.post('/send-email', contactLimiter, (req, res) => {
+    if (!req.body || typeof req.body !== 'object' || Array.isArray(req.body)) {
+        return res.status(400).json({ error: 'Données de formulaire invalides' });
+    }
+
+    const honeypot = req.body.website;
+    if (typeof honeypot === 'string' ? honeypot.trim() !== '' : honeypot != null) {
+        return res.status(200).json({ message: 'Email sent' });
+    }
+
     const { firstName, lastName, email, company, message } = req.body;
-    
-    // Validation des données
-    if (!firstName || !lastName || !email || !message) {
+    const companyInput = company ?? '';
+
+    if ([firstName, lastName, email, message].some(value => typeof value !== 'string') || typeof companyInput !== 'string') {
+        return res.status(400).json({ error: 'Données de formulaire invalides' });
+    }
+
+    const cleanFirstName = firstName.trim();
+    const cleanLastName = lastName.trim();
+    const cleanEmail = email.trim();
+    const cleanCompany = companyInput.trim();
+    const cleanMessage = message.trim();
+
+    if (!cleanFirstName || !cleanLastName || !cleanEmail || !cleanMessage) {
         return res.status(400).json({ error: 'Champs requis manquants' });
     }
-    
-    if (!validateEmail(email)) {
+
+    if (cleanFirstName.length > 50 || cleanLastName.length > 50 || cleanEmail.length > 254 || cleanCompany.length > 100 || cleanMessage.length > 5000) {
+        return res.status(400).json({ error: 'Un ou plusieurs champs dépassent la longueur autorisée' });
+    }
+
+    if (!validateEmail(cleanEmail)) {
         return res.status(400).json({ error: 'Email invalide' });
     }
-    
-    // Nettoyage et limitation des données
-    const cleanFirstName = sanitizeString(firstName, 50);
-    const cleanLastName = sanitizeString(lastName, 50);
-    const cleanCompany = sanitizeString(company, 100);
-    const cleanMessage = sanitizeString(message, 5000);
 
     const mailOptions = {
-    from: email,
+    from: process.env.EMAIL_USER,
+    replyTo: cleanEmail,
     to: process.env.EMAIL_USER,
     subject: 'Contact Form Submission',
-    text: `Name: ${cleanFirstName} ${cleanLastName}\nEmail: ${email}\nCompany: ${cleanCompany}\nMessage: ${cleanMessage}`
+    text: `Name: ${cleanFirstName} ${cleanLastName}\nEmail: ${cleanEmail}\nCompany: ${cleanCompany}\nMessage: ${cleanMessage}`
 };
 
     transporter.sendMail(mailOptions, (error, info) => {
@@ -131,15 +159,6 @@ const imageFileFilter = (req, file, cb) => {
 const upload = multer({ storage: storage, fileFilter: imageFileFilter, limits: { fileSize: 5 * 1024 * 1024 } });
 
 // Middleware
-app.use(express.json({ limit: '10mb' })); // Limiter taille des requêtes
-app.use(cors({
-    origin: process.env.NODE_ENV === 'production'
-        ? (process.env.ALLOWED_ORIGINS || '').split(',').map(o => o.trim()).filter(Boolean)
-        : ['http://localhost:5173', 'http://localhost:3000'],
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization']
-}));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 

@@ -6,12 +6,17 @@
 
   let showModal = false;
   let showNewsletterModal = false; // Ajout de la variable
+  let contactCloseTimeout;
 
   function openModal() {
+      clearTimeout(contactCloseTimeout);
+      contactCloseTimeout = undefined;
       showModal = true;
   }
 
   function closeModal() {
+      clearTimeout(contactCloseTimeout);
+      contactCloseTimeout = undefined;
       showModal = false;
   }
 
@@ -27,8 +32,9 @@
    * Handle form submit event
    * @param {CustomEvent} event
    */
-  function handleFormSubmit(event) {
-      closeModal();
+  function handleFormSubmit() {
+      clearTimeout(contactCloseTimeout);
+      contactCloseTimeout = setTimeout(closeModal, 2500);
   }
 
   onMount(() => {

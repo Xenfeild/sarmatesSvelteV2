@@ -11,6 +11,7 @@
     let email = '';
     let company = '';
     let message = '';
+    let website = '';
 
     let sending = false;
     let success: boolean | null = null;
@@ -24,13 +25,14 @@
             const response = await fetch(getApiUrl('/send-email'), {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ firstName, lastName, email, company, message })
+                body: JSON.stringify({ firstName, lastName, email, company, message, website })
             });
             const data = await response.json();
             if (response.ok) {
                 success = true;
                 dispatch('submit', { firstName, lastName, email, company, message });
                 firstName = lastName = email = company = message = '';
+                website = '';
             } else {
                 success = false;
                 errorMsg = data.error || data.message || "Erreur lors de l'envoi. Merci de réessayer.";
@@ -49,16 +51,20 @@
     <div class="modal">
         <button class="close" on:click={close}>X</button>
         <form on:submit|preventDefault={handleFormSubmit}>
+          <div class="honeypot" aria-hidden="true">
+            <label for="contactWebsite">Website</label>
+            <input type="text" id="contactWebsite" name="website" bind:value={website} tabindex="-1" autocomplete="off">
+          </div>
             <label for="firstName">First Name</label>
-            <input type="text" id="firstName" bind:value={firstName} required>
+            <input type="text" id="firstName" bind:value={firstName} maxlength="50" required>
             <label for="lastName">Last Name</label>
-            <input type="text" id="lastName" bind:value={lastName} required>
+            <input type="text" id="lastName" bind:value={lastName} maxlength="50" required>
             <label for="email">Email</label>
-            <input type="email" id="email" bind:value={email} required>
+            <input type="email" id="email" bind:value={email} maxlength="254" required>
             <label for="company">Company</label>
-            <input type="text" id="company" bind:value={company}>
+            <input type="text" id="company" bind:value={company} maxlength="100">
             <label for="message">Message</label>
-            <textarea id="message" bind:value={message} required></textarea>
+            <textarea id="message" bind:value={message} maxlength="5000" required></textarea>
             <button type="submit" disabled={sending}>{sending ? 'Envoi...' : 'Submit'}</button>
             {#if success === true}
                 <p style="color:green;">Message envoyé !</p>
@@ -106,6 +112,13 @@
     display: flex;
     flex-direction: column;
     font-family: $title-font;
+  }
+  .honeypot {
+    position: absolute;
+    left: -10000px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
   }
   label {
     margin-top: 1rem;
