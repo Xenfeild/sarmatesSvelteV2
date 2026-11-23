@@ -52,6 +52,67 @@
     "legalP7": "Por email",
     "legalP8": "Por correo",
     "personalData": "Datos Personales",
-    "legalP9": "El tratamiento de sus datos personales está regulado por nuestra Política de Privacidad, disponible en la sección 'Política de Protección de Datos Personales', de conformidad con el Reglamento General de Protección de Datos 2016/679 del 27 de abril de 2016 ('RGPD').",
-    "legalP10": "Aviso legal generado por "
+    "legalP9_before": "El tratamiento de sus datos personales está regulado por nuestra Política de Privacidad, disponible en la sección '",
+    "legalP9_link": "Política de Protección de Datos Personales",
+    "legalP9_after": "', de conformidad con el Reglamento General de Protección de Datos 2016/679 del 27 de abril de 2016 ('RGPD').",
+    "legalP10": "Aviso legal generado por ",
+
+    "privacyPolicy_title": "Política de Privacidad – Sarmates Music",
+    "privacyPolicy_lastUpdate": "Última actualización: 23 de noviembre de 2026",
+    
+    "privacyPolicy_section1_title": "1. Objeto y Responsable del Tratamiento",
+    "privacyPolicy_section1_p1": "Esta política explica cómo el sitio web Sarmates Music recopila y utiliza los datos personales de sus visitantes, de conformidad con la normativa aplicable, en particular el RGPD.",
+    "privacyPolicy_section1_p2": "El sitio web es operado por la asociación Sayan Altaï, que es responsable del tratamiento de datos personales.",
+    "privacyPolicy_section1_p3": "Su administración técnica y cotidiana es llevada a cabo exclusivamente por Antonio Torres, administrador web, en nombre de la asociación.",
+    "privacyPolicy_section1_p4": "Los datos de contacto completos de la asociación se encuentran en el aviso legal del sitio web.",
+    
+    "privacyPolicy_section2_title": "2. Datos Recopilados y Uso",
+    "privacyPolicy_section2_p1": "El sitio web recopila datos personales únicamente en el ámbito de sus funcionalidades.",
+    
+    "privacyPolicy_section2_subsection1_title": "Formulario de Contacto",
+    "privacyPolicy_section2_subsection1_p1": "El formulario permite a cualquier persona (fan, prestador de servicios u otro) contactar con la banda.",
+    "privacyPolicy_section2_subsection1_p2": "La información solicitada es:",
+    "privacyPolicy_section2_subsection1_p3": "• Nombre y apellidos: obligatorio\n• Dirección de correo electrónico: obligatoria\n• Empresa: opcional\n• Mensaje: contenido de la solicitud",
+    "privacyPolicy_section2_subsection1_p4": "Los mensajes se envían a admin@sarmates-music.com y se utilizan únicamente para procesar y responder a las solicitudes.",
+    "privacyPolicy_section2_subsection1_p5": "Se conservan durante 12 meses después del último intercambio, a menos que circunstancias específicas justifiquen una retención más prolongada.",
+    "privacyPolicy_section2_subsection1_p6": "Los datos de contacto proporcionados en este formulario no se utilizan para suscribir automáticamente a una persona al boletín informativo.",
+    
+    "privacyPolicy_section2_subsection2_title": "Boletín Informativo",
+    "privacyPolicy_section2_subsection2_p1": "La suscripción al boletín informativo requiere validación explícita.",
+    "privacyPolicy_section2_subsection2_p2": "Las suscripciones y los envíos son gestionados por Brevo, que trata las direcciones de correo electrónico de los suscriptores en nombre de la asociación.",
+    "privacyPolicy_section2_subsection2_p3": "Los datos de contacto se conservan mientras la suscripción permanezca activa. Cada boletín informativo incluye un enlace para darse de baja que permite cancelar la suscripción. Los contactos dados de baja se eliminan de la lista de distribución.",
+    "privacyPolicy_section2_subsection2_p4": "Según la configuración del servicio, también se pueden utilizar estadísticas de apertura y clics.",
+    
+    "privacyPolicy_section3_title": "3. Proveedores de Servicios y Servicios Externos",
+    "privacyPolicy_section3_p1": "Ciertos servicios externos intervienen en el funcionamiento del sitio web:",
+    "privacyPolicy_section3_p2": "• OVH: alojamiento del sitio web en un servidor VPS\n• Brevo: gestión del boletín informativo\n• YouTube y Spotify: integración de contenido de vídeo y música",
+    "privacyPolicy_section3_p3": "Estos proveedores pueden tratar ciertos datos técnicos o personales necesarios para sus servicios, de conformidad con sus propias políticas de privacidad.",
+    "privacyPolicy_section3_p4": "La asociación no vende datos personales ni los comparte voluntariamente con terceros con fines comerciales.",
+    
+    "privacyPolicy_section4_title": "4. Cookies y Contenido Integrado",
+    "privacyPolicy_section4_p1": "El sitio web utiliza un banner de gestión de cookies que ofrece dos opciones: aceptar solo cookies necesarias o aceptar todas las cookies.",
+    "privacyPolicy_section4_p2": "Ciertos servicios integrados también pueden utilizar sus propias cookies o tecnologías de seguimiento.",
+    "privacyPolicy_section4_p3": "• YouTube: cuando se rechazan las cookies no esenciales, el sitio web normalmente utiliza el dominio youtube-nocookie.com para limitar los rastreadores asociados con videos. Sin embargo, esto no garantiza la ausencia de cualquier transmisión de datos.\n• Spotify: los reproductores integrados pueden resultar en intercambios de datos con la plataforma. Su visualización normalmente se bloquea cuando se rechazan las cookies.",
+    "privacyPolicy_section4_p4": "El banner actual aún no permite cambiar las preferencias después de la selección inicial. Se está planeando una función de gestión de preferencias para el futuro.",
+    "privacyPolicy_section4_p5": "Los servicios externos permanecen sujetos a sus propias políticas de privacidad.",
+    
+    "privacyPolicy_section5_title": "5. Alojamiento y Seguridad",
+    "privacyPolicy_section5_p1": "El sitio web está desarrollado con SvelteKit y alojado en un servidor VPS proporcionado por OVH.",
+    "privacyPolicy_section5_p2": "Su administración y mantenimiento son llevados a cabo por Antonio Torres.",
+    "privacyPolicy_section5_p3": "Se implementan medidas de seguridad para limitar los riesgos de acceso no autorizado, pérdida o divulgación de datos personales.",
+    
+    "privacyPolicy_section6_title": "6. Derechos de los Usuarios",
+    "privacyPolicy_section6_p1": "De conformidad con el RGPD, toda persona interesada tiene, según las condiciones establecidas en la normativa, los siguientes derechos:",
+    "privacyPolicy_section6_p2": "• Acceso: obtener una copia de los datos personales que se poseen sobre usted\n• Rectificación: corregir datos inexactos\n• Supresión: solicitar la eliminación de sus datos cuando se cumplan las condiciones legales\n• Limitación: solicitar la limitación de ciertos tratamientos\n• Oposición: oponerse a ciertos tratamientos\n• Portabilidad: recuperar ciertos datos en un formato estructurado cuando sea aplicable\n• Revocación del consentimiento: revocar el consentimiento en cualquier momento cuando el tratamiento se basa en él",
+    "privacyPolicy_section6_p3": "Para ejercer estos derechos o hacer preguntas sobre sus datos personales, puede contactar:",
+    "privacyPolicy_section6_p4": "admin@sarmates-music.com",
+    "privacyPolicy_section6_p5": "Las solicitudes son procesadas por Antonio Torres, en nombre de la asociación Sayan Altaï. Se puede solicitar información adicional para verificar su identidad si es necesario.",
+    "privacyPolicy_section6_p6": "Si considera que sus derechos no se respetan, puede presentar una reclamación ante la CNIL: https://www.cnil.fr/",
+    
+    "privacyPolicy_section7_title": "7. Cambios y Contacto",
+    "privacyPolicy_section7_p1": "Esta política puede modificarse en función de los cambios en el sitio web, los servicios utilizados o la normativa aplicable.",
+    "privacyPolicy_section7_p2": "La versión publicada en el sitio web es la versión actual.",
+    "privacyPolicy_section7_p3": "Para cualquier pregunta relacionada con la privacidad o los datos personales:",
+    "privacyPolicy_section7_p4": "Asociación Sayan Altaï\nAtención: Antonio Torres, administrador web\nadmin@sarmates-music.com",
+    "privacyPolicy_section7_p5": "Los datos de contacto completos de la asociación se encuentran en el aviso legal."
 }

@@ -35,7 +35,7 @@
                     <p>{$translations.legalP7} : admin@sarmates-music.com</p>
                     <p>{$translations.legalP8} : 21 avenue de Bretagne - 76100 ROUEN</p>
                     <h3>{$translations.personalData}</h3>
-                    <p>{$translations.legalP9}</p>
+                    <p>{$translations.legalP9_before}<a href="/privacyPolicy">{$translations.legalP9_link}</a>{$translations.legalP9_after}</p>
                     <p>{$translations.legalP10} <a href="https://www.legalstart.fr/">Legalstart.fr.</a></p>
                 </div>
             </div>
