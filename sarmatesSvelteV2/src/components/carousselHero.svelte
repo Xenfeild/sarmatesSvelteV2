@@ -6,7 +6,7 @@
     // Imports images résolus par Vite (valides en dev et en prod)
     import pochetteDesktop from '$lib/img/backgroundSarmates.webp';
     import pochetteMobile from '$lib/img/m/backgroundSarmates.webp';
-    import leoff1Img from '$lib/img/leoff1.webp';
+    import TEL2026Img from '$lib/img/TEL2026.jpg';
     import sarmates29Img from '$lib/img/Sarmates_shoot-29.webp';
     import spotifyLogo from '$lib/img/spotify.webp';
     import appleMusicLogo from '$lib/img/icons8-music-500.webp';
@@ -30,6 +30,13 @@
                 { src: bandcampLogo, alt: 'bandcamp logo', url: 'https://sarmates.bandcamp.com/album/sarmates?from=search&search_item_id=1280216646&search_item_type=a&search_match_part=%3F&search_page_id=3699891871&search_page_no=1&search_rank=1&search_sig=8d02d4a16dbc3663c3d0e7cfa4648846' },
                 { src: youtubeLogo, alt: 'youtube logo', url: 'https://www.youtube.com/channel/UCD7GKasfYOhxACI6XQZgUvw' }
             ]
+        },
+                {
+                type: 'image',
+                src: TEL2026Img,
+                alt: 'trolls et légende 2027',
+                text: 'caption4',
+                cta: { url: '#live', text: 'goToLive'}
         },
         { 
             type: 'video', 
