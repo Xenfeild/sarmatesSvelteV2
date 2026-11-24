@@ -31,6 +31,7 @@
                 { src: youtubeLogo, alt: 'youtube logo', url: 'https://www.youtube.com/channel/UCD7GKasfYOhxACI6XQZgUvw' }
             ]
         },
+<<<<<<< HEAD
 	{
 		type: 'image',
 		src: TEL2026Img,
@@ -38,6 +39,15 @@
 		text: 'caption4',
 		cta: { url: '#live', text: 'goToLive'}
 	},
+=======
+                {
+                type: 'image',
+                src: TEL2026Img,
+                alt: 'trolls et légende 2027',
+                text: 'caption4',
+                cta: { url: '#live', text: 'goToLive'}
+        },
+>>>>>>> 830cfa95b08b5ca6e17af846dec57ce76d107825
         { 
             type: 'video', 
             src: '/introSarmates.mp4', 
