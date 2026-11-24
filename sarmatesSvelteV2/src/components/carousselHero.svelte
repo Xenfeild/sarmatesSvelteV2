@@ -6,7 +6,7 @@
     // Imports images résolus par Vite (valides en dev et en prod)
     import pochetteDesktop from '$lib/img/backgroundSarmates.webp';
     import pochetteMobile from '$lib/img/m/backgroundSarmates.webp';
-    import leoff1Img from '$lib/img/leoff1.webp';
+    import TEL2026Img from '$lib/img/TEL2026.jpg';
     import sarmates29Img from '$lib/img/Sarmates_shoot-29.webp';
     import spotifyLogo from '$lib/img/spotify.webp';
     import appleMusicLogo from '$lib/img/icons8-music-500.webp';
@@ -31,6 +31,13 @@
                 { src: youtubeLogo, alt: 'youtube logo', url: 'https://www.youtube.com/channel/UCD7GKasfYOhxACI6XQZgUvw' }
             ]
         },
+	{
+		type: 'image',
+		src: TEL2026Img,
+		alt: 'trolls et légende 2027',
+		text: 'caption4',
+		cta: { url: '#live', text: 'goToLive'}
+	},
         { 
             type: 'video', 
             src: '/introSarmates.mp4', 

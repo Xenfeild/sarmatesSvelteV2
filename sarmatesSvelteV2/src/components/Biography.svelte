@@ -51,12 +51,14 @@ ${$translations.biography3}`,
             role: $translations.sarmata,
             content: $translations.sarmataBio
         },
+	/*
         {
             name: "Victor Poulain",
             image: "/img/guitar_bio.webp",
             role: $translations.guitar,
             content: $translations.guitarBio
         },
+	*/
         {
             name: "Antonio Xenfeild",
             image: "/img/bass_bio.webp",
